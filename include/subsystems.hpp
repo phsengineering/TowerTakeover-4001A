@@ -4,3 +4,4 @@
 extern Motor pickUpM1;
 extern Motor pickUpM2;
 void runPickUps();
+void autonhandler();
