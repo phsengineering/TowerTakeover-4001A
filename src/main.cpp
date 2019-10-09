@@ -16,6 +16,7 @@ void autonomous() {
  void opcontrol() {
 	pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
 	pros::lcd::initialize();
+	autonhandler();
 	while(true) {
 		//Drive
 		int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -47,6 +48,9 @@ void autonomous() {
 		else if (mainController.get_digital(E_CONTROLLER_DIGITAL_R2)) {
 			intakeHandler(-190);
 		}
+		else if(mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
+			intakeHandler(-85);
+		}
 		else {
 			intakeHandler(0);
 		}
@@ -62,38 +66,13 @@ void autonomous() {
 		}
 		int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 		trayHandler(trayPos);
-		std::ostringstream sstream;
-		sstream << (int)intakeL.get_position();
-		std::string intakeLStr = sstream.str();
-
-		sstream << (int)intakeR.get_position();
-		std::string intakeRStr = sstream.str();
-
-		sstream << (int)driveLF.get_position();
-		std::string LFString = sstream.str();
-
-		sstream << (int)driveRF.get_position();
-		std::string RFString = sstream.str();
-		sstream << (int)tray.get_position();
-		std::string trayStr = sstream.str();
-		sstream << (int)lift.get_position();
-		std::string liftStr = sstream.str();
-		pros::lcd::set_text(1, "Intake R " + intakeRStr);
-		pros::lcd::set_text(2, "Intake L " + intakeLStr);
-		pros::lcd::set_text(3, "Left " + LFString);
-		pros::lcd::set_text(4, "Right " + RFString);
-		pros::lcd::set_text(5, "Tray " + trayStr);
-		pros::lcd::set_text(6, "Lift " + liftStr);
-		pros::delay(20);
-		if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
-			pros::lcd::clear_line(1);
-			pros::lcd::clear_line(2);
-			pros::lcd::clear_line(3);
-			pros::lcd::clear_line(4);
-			pros::lcd::clear_line(5);
-			pros::lcd::clear_line(6);
-			pros::lcd::clear_line(7);
+		std::string fPositionstuff = std::to_string(obtainPositionF());
+		std::string bPositionstuff = std::to_string(obtainPositionB());
+		//if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+			pros::lcd::set_text(1, fPositionstuff);
+			pros::lcd::set_text(2, bPositionstuff);
+			pros::delay(20);
 			//pros::lcd::clear_line(1);
-		}
+		//}
 	}
  }
