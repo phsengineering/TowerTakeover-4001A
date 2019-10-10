@@ -16,7 +16,9 @@ void autonomous() {
  void opcontrol() {
 	pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
 	pros::lcd::initialize();
-	autonhandler();
+	//autonhandler();
+	lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+	tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	while(true) {
 		//Drive
 		int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -46,31 +48,48 @@ void autonomous() {
 			intakeHandler(190);
 		}
 		else if (mainController.get_digital(E_CONTROLLER_DIGITAL_R2)) {
-			intakeHandler(-190);
+			intakeHandler(-95);
 		}
 		else if(mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
-			intakeHandler(-85);
+			intakeHandler(-195);
 		}
 		else {
 			intakeHandler(0);
 		}
-		if(mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-			liftHandler(95);
+		if(mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) { //350 and 210
+			while(true) {
+				if(lift.get_position() < 350) {
+					lift.move_velocity(95);
+				}
+				if(tray.get_position() < 210) {
+					tray.move_velocity(150);
+				}
+
+			}
 		}
 		else if(mainController.get_digital(E_CONTROLLER_DIGITAL_L2)) {
-			liftHandler(-95);
+			while(lift.get_position() > 0) {
+				liftHandler(-95);
+			}
+			while(tray.get_position() > 0) {
+				trayHandler(-150);
+			}
+			liftHandler(0);
+			trayHandler(0);
 		}
 		else {
 			liftHandler(0);
-			lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 		}
 		int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 		trayHandler(trayPos);
-		std::string fPositionstuff = std::to_string(obtainPositionF());
-		std::string bPositionstuff = std::to_string(obtainPositionB());
+		puts(std::to_string(lift.get_position()).c_str());
+
+
+		//std::string fPositionstuff = std::to_string(obtainPositionF());
+		//std::string bPositionstuff = std::to_string(obtainPositionB());
 		//if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
-			pros::lcd::set_text(1, fPositionstuff);
-			pros::lcd::set_text(2, bPositionstuff);
+			//pros::lcd::set_text(1, fPositionstuff);
+			//pros::lcd::set_text(2, bPositionstuff);
 			pros::delay(20);
 			//pros::lcd::clear_line(1);
 		//}
