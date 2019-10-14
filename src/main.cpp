@@ -19,6 +19,7 @@ void autonomous() {
 	//autonhandler();
 	lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+	int macroHandler = 0;
 	while(true) {
 		//Drive
 		int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -57,33 +58,62 @@ void autonomous() {
 			intakeHandler(0);
 		}
 		if(mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) { //350 and 210
-			while(true) {
-				if(lift.get_position() < 350) {
-					lift.move_velocity(95);
+			macroHandler++;
+			if(macroHandler % 2 == 1) {
+				tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+				lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+				while(true) {
+					lift.move_velocity(70);
+					printf("%d", lift.get_position());
+					pros::delay(100);
+					tray.move_velocity(100);
+					if(tray.get_position() > 275) {
+						tray.move_velocity(0);
+					}
+					if(lift.get_position() > 175) {
+						lift.move_velocity(0);
+					}
+					if(tray.get_position() > 275 && lift.get_position() > 175) {
+						tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+						lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+						break;
+					}
 				}
-				if(tray.get_position() < 210) {
-					tray.move_velocity(150);
+			}
+			else if(macroHandler % 2 == 0) {
+				tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+				lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+				while(true) {
+					lift.move_velocity(-70);
+					pros::delay(100);
+					tray.move_velocity(-75);
+					if(tray.get_position() < 0) {
+						tray.move_velocity(0);
+					}
+					if(lift.get_position() < 0) {
+						lift.move_velocity(0);
+					}
+					if(tray.get_position() < 0 && lift.get_position() < 0) {
+						break;
+					}
 				}
-
 			}
 		}
 		else if(mainController.get_digital(E_CONTROLLER_DIGITAL_L2)) {
-			while(lift.get_position() > 0) {
-				liftHandler(-95);
+			while(lift.get_position() > 0 || tray.get_position() > 0) {
+				lift.move_velocity(-95);
+				tray.move_velocity(-75);
 			}
-			while(tray.get_position() > 0) {
-				trayHandler(-150);
-			}
-			liftHandler(0);
-			trayHandler(0);
 		}
 		else {
 			liftHandler(0);
 		}
 		int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
-		trayHandler(trayPos);
+		if (trayPos > 0) {
+			trayHandler(trayPos);
+		}
+		//puts(std::to_string(lift.get_position()).c_str());
 		puts(std::to_string(lift.get_position()).c_str());
-
 
 		//std::string fPositionstuff = std::to_string(obtainPositionF());
 		//std::string bPositionstuff = std::to_string(obtainPositionB());
