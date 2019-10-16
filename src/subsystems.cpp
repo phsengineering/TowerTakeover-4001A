@@ -51,10 +51,6 @@ void smartDrive(int speed, double fPoint, double bPoint) {
   clearDrive();
   pros::lcd::initialize();
   printf("Running");
-  //printf("Max speed " + speed);
-  //std::string fStr = std::to_string(fPoint);
-  //printf("fPoint limit ",  fStr);
-
   int updateSpeed = 5;
   while(obtainPositionF() < fPoint) {
     driveLF.move_velocity(updateSpeed);
@@ -77,17 +73,6 @@ void smartDrive(int speed, double fPoint, double bPoint) {
       updateSpeed = speed;
       puts(std::to_string(updateSpeed).c_str());
     }
-    // if(updateSpeed < speed && updateSpeed % 2 == 0) {
-    //   updateSpeed+=3;
-    //   puts(std::to_string(obtainPositionF()).c_str());
-    //
-    //   //puts(std::to_string(driveRF.get_position()).c_str())
-    // }
-    // else {
-    //   updateSpeed++;
-    //   puts(std::to_string(obtainPositionF()).c_str());
-    //   puts(std::to_string(updateSpeed).c_str());
-    // }
     pros::delay(30);
   }
   driveLF.move_velocity(0); //allstop
