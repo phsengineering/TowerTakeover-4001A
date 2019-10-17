@@ -20,7 +20,6 @@ void opcontrol() {
 		tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		int macroHandler = 0;
 		int macroHandler2 = 0;
-		autonhandler();
 		while(true) {
 			printf("%d\n", lEncoder.get_value());
 			if(lift.get_temperature() > 55.0) {
@@ -36,6 +35,9 @@ void opcontrol() {
 				r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4 ), r);
 			}
 			drive(y, r);
+			if(mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
+				break;
+			}
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A))
 			{
 				driveLF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -165,4 +167,5 @@ void opcontrol() {
 			printf("%f", tray.get_position());
 			pros::delay(20);
 		}
+		autonhandler();
 }
