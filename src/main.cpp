@@ -20,7 +20,9 @@ void opcontrol() {
 		tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		int macroHandler = 0;
 		int macroHandler2 = 0;
+		autonhandler();
 		while(true) {
+			printf("%d\n", lEncoder.get_value());
 			if(lift.get_temperature() > 55.0) {
 				mainController.rumble(". -");
 			}
