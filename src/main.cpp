@@ -15,13 +15,15 @@ void autonomous() {
 
 void opcontrol() {
 		pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
+		autonhandler();
 		pros::lcd::initialize();
 		lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		int macroHandler = 0;
 		int macroHandler2 = 0;
+		gyro.reset();
 		while(true) {
-			printf("%d\n", lEncoder.get_value());
+			puts(std::to_string(gyro.get_value()).c_str());
 			if(lift.get_temperature() > 55.0) {
 				mainController.rumble(". -");
 			}
@@ -83,7 +85,7 @@ void opcontrol() {
 						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
 							break;
 						}
-						printf("%f\n", lift.get_position());
+						//printf("%f\n", lift.get_position());
 					}
 					tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 					lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -104,7 +106,7 @@ void opcontrol() {
 						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
 							break;
 						}
-						printf("%f\n", lift.get_position());
+						//printf("%f\n", lift.get_position());
 					}
 					tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 					lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -128,7 +130,7 @@ void opcontrol() {
 						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
 							break;
 						}
-						printf("%f\n", lift.get_position());
+						//printf("%f\n", lift.get_position());
 					}
 				}
 				else if(macroHandler2 % 2 == 0) {
@@ -147,7 +149,7 @@ void opcontrol() {
 						if(tray.get_position() < 0 && lift.get_position() < 0) {
 							break;
 						}
-						printf("%f\n", lift.get_position());
+						//printf("%f\n", lift.get_position());
 					}
 				}
 				tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -164,7 +166,7 @@ void opcontrol() {
 			int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 			trayHandler(trayPos);
 			//printf("Temperature: %f \n", lift.get_temperature());
-			printf("%f", tray.get_position());
+			//printf("%f", tray.get_position());
 			pros::delay(20);
 		}
 		autonhandler();
