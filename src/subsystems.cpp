@@ -34,6 +34,12 @@ void trayHandler(int trayPos) {
 void liftHandler(int liftInput) {
   lift.move_velocity(liftInput);
 }
+void driveVel(int updateSpeed) {
+  driveLF.move_velocity(updateSpeed);
+  driveLB.move_velocity(updateSpeed);
+  driveRB.move_velocity(updateSpeed);
+  driveRF.move_velocity(updateSpeed);
+}
 void clearDrive() {
   driveLF.tare_position();
   driveLB.tare_position();
@@ -48,6 +54,16 @@ double obtainPositionF() {
   double right = rEncoder.get_value();
   return ((left+right)/2);
 }
+void set_brake(int mode, Motor motor) {
+  switch(mode) {
+    case 0:
+      motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    case 1:
+      motor.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    case 2:
+      motor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+  }
+}
 void smartDrive(int speed, double fPoint) {
   clearDrive();
   if(speed > 0) {
@@ -57,11 +73,7 @@ void smartDrive(int speed, double fPoint) {
         updateSpeed+=30;
       }
       intakeHandler(190);
-      driveLF.move_velocity(updateSpeed);
-      driveLB.move_velocity(updateSpeed);
-      driveRB.move_velocity(updateSpeed);
-      driveRF.move_velocity(updateSpeed);
-      puts(std::to_string(updateSpeed).c_str());
+      driveVel(updateSpeed);
       pros::delay(75);
     }
     while(obtainPositionF() < fPoint) {
@@ -71,17 +83,11 @@ void smartDrive(int speed, double fPoint) {
       if(updateSpeed == 0) {
         break;
       }
-      driveLF.move_velocity(updateSpeed);
-      driveLB.move_velocity(updateSpeed);
-      driveRB.move_velocity(updateSpeed);
-      driveRF.move_velocity(updateSpeed);
+      driveVel(updateSpeed);
       puts(std::to_string(updateSpeed).c_str());
       pros::delay(75);
     }
-    driveLF.move_velocity(0); //allstop
-    driveLB.move_velocity(0);
-    driveRB.move_velocity(0);
-    driveRF.move_velocity(0);
+    driveVel(0);
     if(updateSpeed == 0) {
       intakeHandler(0);
     }
@@ -93,10 +99,7 @@ void smartDrive(int speed, double fPoint) {
         updateSpeed-=10;
       }
       intakeHandler(190);
-      driveLF.move_velocity(updateSpeed);
-      driveLB.move_velocity(updateSpeed);
-      driveRB.move_velocity(updateSpeed);
-      driveRF.move_velocity(updateSpeed);
+      driveVel(updateSpeed);
       printf("%d", obtainPositionF());
       pros::delay(75);
     }
@@ -104,19 +107,59 @@ void smartDrive(int speed, double fPoint) {
       if(updateSpeed < 0) {
         updateSpeed+=5;
       }
-      driveLF.move_velocity(updateSpeed);
-      driveLB.move_velocity(updateSpeed);
-      driveRB.move_velocity(updateSpeed);
-      driveRF.move_velocity(updateSpeed);
+      driveVel(updateSpeed);
       printf("%d", obtainPositionF());
       pros::delay(75);
     }
-    driveLF.move_velocity(0); //allstop
-    driveLB.move_velocity(0);
-    driveRB.move_velocity(0);
-    driveRF.move_velocity(0);
+    driveVel(0);
     if(updateSpeed == 0) {
       intakeHandler(0);
     }
   }
+}
+void get_gyro() {
+  double value = 0;
+  double lastValue = 0;
+  double delta = 0;
+  double absGyroValue;
+  double gyroValue;
+  int invert = -1;
+
+  std::uint32_t now = pros::millis();
+  //while(true) {
+    value = gyro.get_value();
+    if(value > -4000 && value < 4000) {
+      value = value * invert;
+      int delta = value - lastValue;
+      lastValue = value;
+      if(delta > 1800) {
+        delta -=3600;
+      }
+      if(delta < -1800) {
+        delta +=3600;
+      }
+      gyroValue = value;
+      absGyroValue+= delta;
+      printf("Abs gyro value: %d", absGyroValue);
+      //delay_until(&now, TASK_DELAY_SHORT);
+    }
+  //}
+}
+void counterclockwise(int angle, int speed) {
+  while(gyro.get_value() > -angle) {
+    driveRF.move_velocity(speed);
+    driveRB.move_velocity(speed);
+    driveLF.move_velocity(-speed);
+    driveLB.move_velocity(-speed);
+  }
+  driveVel(0);
+}
+void clockwise(int angle, int speed) {
+  while(gyro.get_value() < angle) {
+    driveRF.move_velocity(-speed);
+    driveRB.move_velocity(-speed);
+    driveLF.move_velocity(speed);
+    driveLB.move_velocity(speed);
+  }
+  driveVel(0);
 }
