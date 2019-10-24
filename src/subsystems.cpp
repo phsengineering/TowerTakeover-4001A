@@ -68,7 +68,11 @@ void smartDrive(int speed, double fPoint) {
   clearDrive();
   if(speed > 0) {
     int updateSpeed = 0;
+    clearDrive();
     while(obtainPositionF() < fPoint/2.0) {
+      if(updateSpeed < 0) {
+        break;
+      }
       if(updateSpeed < speed) {
         updateSpeed+=30;
       }
@@ -77,6 +81,9 @@ void smartDrive(int speed, double fPoint) {
       pros::delay(75);
     }
     while(obtainPositionF() < fPoint) {
+      if(updateSpeed < 0) {
+        break;
+      }
       if(updateSpeed > 0) {
         updateSpeed-=30;
       }
@@ -95,20 +102,25 @@ void smartDrive(int speed, double fPoint) {
   else {
     int updateSpeed = 0;
     while(obtainPositionF() > fPoint/2.0) {
+      if(updateSpeed > 0) {
+        break;
+      }
       if(updateSpeed > speed) {
         updateSpeed-=10;
       }
       intakeHandler(190);
       driveVel(updateSpeed);
-      printf("%d", obtainPositionF());
       pros::delay(75);
     }
     while(obtainPositionF() > fPoint) {
+      if(updateSpeed > 0) {
+        break;
+      }
       if(updateSpeed < 0) {
         updateSpeed+=5;
       }
       driveVel(updateSpeed);
-      printf("%d", obtainPositionF());
+      //printf("%d", obtainPositionF());
       pros::delay(75);
     }
     driveVel(0);
@@ -140,12 +152,13 @@ void get_gyro() {
       }
       gyroValue = value;
       absGyroValue+= delta;
-      printf("Abs gyro value: %d", absGyroValue);
+      printf("Abs gyro value: %d\n", absGyroValue);
       //delay_until(&now, TASK_DELAY_SHORT);
     }
   //}
 }
-void counterclockwise(int angle, int speed) {
+void counterclockwise(double angle, int speed) {
+  angle*=10.0;
   while(gyro.get_value() > -angle) {
     driveRF.move_velocity(speed);
     driveRB.move_velocity(speed);
@@ -154,12 +167,30 @@ void counterclockwise(int angle, int speed) {
   }
   driveVel(0);
 }
-void clockwise(int angle, int speed) {
+void clockwise(double angle, int speed) {
+  angle*=10.0;
   while(gyro.get_value() < angle) {
     driveRF.move_velocity(-speed);
     driveRB.move_velocity(-speed);
     driveLF.move_velocity(speed);
     driveLB.move_velocity(speed);
+  }
+  driveVel(0);
+}
+void correct(int time, int speed, bool counter) {
+  if(counter) {
+    driveRF.move_velocity(speed);
+    driveRB.move_velocity(speed);
+    driveLF.move_velocity(-speed);
+    driveLB.move_velocity(-speed);
+    pros::delay(time);
+  }
+  else {
+    driveRF.move_velocity(speed);
+    driveRB.move_velocity(speed);
+    driveLF.move_velocity(-speed);
+    driveLB.move_velocity(-speed);
+    pros::delay(time);
   }
   driveVel(0);
 }

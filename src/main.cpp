@@ -40,20 +40,6 @@ void opcontrol() {
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
 				break;
 			}
-			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A))
-			{
-				set_brake(0, driveLF);
-				set_brake(0, driveLB);
-				set_brake(0, driveRF);
-				set_brake(0, driveRB);
-			}
-			else
-			{
-				set_brake(2, driveLF);
-				set_brake(2, driveLB);
-				set_brake(2, driveRF);
-				set_brake(2, driveRB);
-			}
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 				intakeHandler(190);
 			}
@@ -174,5 +160,11 @@ void opcontrol() {
 			int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 			trayHandler(trayPos);
 			pros::delay(20);
+			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
+				gyro.reset();
+			}
+			printf("left position: %d\n", lEncoder.get_value());
+			printf("right position: %d\n", rEncoder.get_value());
+			puts(std::to_string(gyro.get_value()).c_str());
 		}
 }
