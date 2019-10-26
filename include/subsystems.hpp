@@ -12,6 +12,7 @@ extern Motor lift;
 extern ADIEncoder lEncoder;
 extern ADIEncoder rEncoder;
 static int part = 0;
+static int auton = 3; //change to 1
 static bool debug = true;
 void autonhandler();
 void drive(int y, int r);

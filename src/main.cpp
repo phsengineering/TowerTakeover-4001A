@@ -1,9 +1,37 @@
 #include "main.h"
 #include "subsystems.hpp"
 #include <sstream>
-void initialize() {
-	pros::lcd::initialize();
+
+#include "main.h"
+#include "subsystems.hpp"
+void on_center_button() {
+ if(auton > 4) {
+	 auton = 1;
+ }
+ else {
+	 auton++;
+ }
+ if (auton == 1) {
+	 pros::lcd::set_text(2, "Red back");
+ }
+ else if (auton == 2) {
+	 pros::lcd::set_text(2, "Blue back");
+ }
+ else if (auton == 3) {
+	 pros::lcd::set_text(2, "Red front");
+ }
+ else if (auton == 4) {
+	 pros::lcd::set_text(2, "Blue front");
+ }
 }
+
+void initialize() {
+ pros::lcd::initialize();
+ pros::lcd::set_text(1, "4001A");
+ pros::lcd::set_text(5, "Auton Ready");
+ pros::lcd::register_btn1_cb(on_center_button);
+}
+
 
 void disabled() {}
 
@@ -37,9 +65,6 @@ void opcontrol() {
 				r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4 ), r);
 			}
 			drive(y, r);
-			if(mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-				break;
-			}
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 				intakeHandler(190);
 			}
@@ -52,7 +77,6 @@ void opcontrol() {
 			else {
 				intakeHandler(0);
 			}
-
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) { //350 and 210
 				macroHandler++;
 				if(macroHandler % 2 == 1) {
@@ -155,13 +179,16 @@ void opcontrol() {
 
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
 				while(tray.get_position() < 730) {
+					if(std::abs(mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y)) > 0) {
+						break;
+					}
 					traySpeed--;
 					tray.move(traySpeed);
 					pros::delay(60);
 				}
 			}
 			if(debug) {
-				printf("Tray: %f", tray.get_position());
+				printf("Pos: %f\n", obtainPositionF());
 			}
 		}
 }

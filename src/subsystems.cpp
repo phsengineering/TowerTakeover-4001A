@@ -12,7 +12,6 @@ Motor intakeL(7, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor lift(8, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES);
 ADIEncoder lEncoder(1, 2, false);
 ADIEncoder rEncoder(3, 4, true);
-
 void drive(int y, int r)
 {
     //Scale up y and r from 127 to 12000
