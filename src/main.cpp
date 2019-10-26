@@ -44,7 +44,7 @@ void autonomous() {
 void opcontrol() {
 		int traySpeed = 127;
 		pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
-		autonhandler();
+		//autonhandler();
 		pros::lcd::initialize();
 		set_brake(1, lift);
 		set_brake(1, tray);
