@@ -190,5 +190,8 @@ void opcontrol() {
 			if(debug) {
 				printf("Pos: %f\n", obtainPositionF());
 			}
+      if(lift.get_position() < 20) {
+        lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+      }
 		}
 }
