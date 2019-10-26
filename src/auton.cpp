@@ -132,12 +132,12 @@ void autonhandler() {
       driveVel(0);
     }
   }
-  else if(auton == 3) { //red front
+  else if(auton == 3) { //red front STILL NEEDS TO BE ADJUSTED
     pros::delay(200);
     clearDrive();
     smartDrive(200, 600);
     clearDrive();
-    while(lEncoder.get_value() > -100) {
+    while(lEncoder.get_value() > -90) {
       driveLF.move_velocity(-50);
       driveLB.move_velocity(-50);
       driveRF.move_velocity(50);
@@ -148,7 +148,7 @@ void autonhandler() {
     smartDrive(200, 950);
     intakeHandler(0);
     clearDrive();
-    while(lEncoder.get_value() > -55) {
+    while(lEncoder.get_value() > -52) {
       driveLF.move_velocity(-50);
       driveLB.move_velocity(-50);
       driveRF.move_velocity(50);
