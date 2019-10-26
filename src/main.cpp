@@ -1,9 +1,37 @@
 #include "main.h"
 #include "subsystems.hpp"
 #include <sstream>
-void initialize() {
-	pros::lcd::initialize();
+
+#include "main.h"
+#include "subsystems.hpp"
+void on_center_button() {
+ if(auton > 4) {
+	 auton = 1;
+ }
+ else {
+	 auton++;
+ }
+ if (auton == 1) {
+	 pros::lcd::set_text(2, "Red back");
+ }
+ else if (auton == 2) {
+	 pros::lcd::set_text(2, "Blue back");
+ }
+ else if (auton == 3) {
+	 pros::lcd::set_text(2, "Red front");
+ }
+ else if (auton == 4) {
+	 pros::lcd::set_text(2, "Blue front");
+ }
 }
+
+void initialize() {
+ pros::lcd::initialize();
+ pros::lcd::set_text(1, "4001A");
+ pros::lcd::set_text(5, "Auton Ready");
+ pros::lcd::register_btn1_cb(on_center_button);
+}
+
 
 void disabled() {}
 
@@ -14,16 +42,16 @@ void autonomous() {
 }
 
 void opcontrol() {
+		int traySpeed = 127;
 		pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
-		autonhandler();
+		//autonhandler();
 		pros::lcd::initialize();
 		set_brake(1, lift);
 		set_brake(1, tray);
 		int macroHandler = 0;
 		int macroHandler2 = 0;
-		gyro.reset();
+		clearDrive();
 		while(true) {
-			get_gyro();
 			if(lift.get_temperature() > 55.0) {
 				mainController.rumble(". -");
 			}
@@ -37,23 +65,6 @@ void opcontrol() {
 				r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4 ), r);
 			}
 			drive(y, r);
-			if(mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-				break;
-			}
-			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A))
-			{
-				set_brake(0, driveLF);
-				set_brake(0, driveLB);
-				set_brake(0, driveRF);
-				set_brake(0, driveRB);
-			}
-			else
-			{
-				set_brake(2, driveLF);
-				set_brake(2, driveLB);
-				set_brake(2, driveRF);
-				set_brake(2, driveRB);
-			}
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 				intakeHandler(190);
 			}
@@ -66,102 +77,93 @@ void opcontrol() {
 			else {
 				intakeHandler(0);
 			}
-
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) { //350 and 210
 				macroHandler++;
 				if(macroHandler % 2 == 1) {
-					set_brake(1, tray);
-					set_brake(1, lift);
-					// while(tray.get_position() < 200 || lift.get_position() < 120) {
-					// 	lift.move_velocity(70);
-					// 	pros::delay(200);
-					// 	tray.move_velocity(175);
-					// 	if(tray.get_position() > 200) {
-					// 		tray.move_velocity(0);
-					// 	}
-					// 	if(lift.get_position() > 120) {
-					// 		lift.move_velocity(0);
-					// 	}
-					// 	if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
-					// 		break;
-					// 	}
-					// }
-					tray.move_absolute(200, 175);
-					pros::delay(200);
-					lift.move_absolute(120, 70);
-					set_brake(0, tray);
-					set_brake(0, lift);
+					tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					while(tray.get_position() < 200 || lift.get_position() < 120) {
+						lift.move_velocity(70);
+						pros::delay(200);
+						tray.move_velocity(175);
+						if(tray.get_position() > 200) {
+							tray.move_velocity(0);
+						}
+						if(lift.get_position() > 120) {
+							lift.move_velocity(0);
+						}
+						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+							break;
+						}
+						//printf("%f\n", lift.get_position());
+					}
+					tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+					lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 				}
 				else if(macroHandler % 2 == 0) {
-					set_brake(1, tray);
-					set_brake(1, lift);
-					// while(tray.get_position() > 0 || lift.get_position() > 0) {
-					// 	lift.move_velocity(-70);
-					// 	pros::delay(100);
-					// 	tray.move_velocity(-100);
-					// 	if(tray.get_position() < 0) {
-					// 		tray.move_velocity(0);
-					// 	}
-					// 	if(lift.get_position() < 0) {
-					// 		lift.move_velocity(0);
-					// 	}
-					// 	if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
-					// 		break;
-					// 	}
-					// }
-					tray.move_absolute(0, -175);
-					pros::delay(100);
-					lift.move_absolute(0, -70);
-					set_brake(0, tray);
-					set_brake(0, lift);
+					tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					while(tray.get_position() > 0 || lift.get_position() > 0) {
+						lift.move_velocity(-70);
+						pros::delay(100);
+						tray.move_velocity(-100);
+						if(tray.get_position() < 0) {
+							tray.move_velocity(0);
+						}
+						if(lift.get_position() < 0) {
+							lift.move_velocity(0);
+						}
+						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+							break;
+						}
+						//printf("%f\n", lift.get_position());
+					}
+					tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+					lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 				}
 			}
 			if(mainController.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 				macroHandler2++;
 				if(macroHandler2 % 2 == 1) {
-					set_brake(1, tray);
-					set_brake(1, lift);
-					// while(lift.get_position() < 205 || tray.get_position() < 200) {
-					// 	lift.move_velocity(70);
-					// 	pros::delay(100);
-					// 	tray.move_velocity(175);
-					// 	if(tray.get_position() > 205) {
-					// 		tray.move_velocity(0);
-					// 	}
-					// 	if(lift.get_position() > 200) {
-					// 		lift.move_velocity(0);
-					// 	}
-					// 	if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
-					// 		break;
-					// 	}
-					// }
-					tray.move_absolute(205, 175);
-					pros::delay(200);
-					lift.move_absolute(200, 70);
+					tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					while(lift.get_position() < 205 || tray.get_position() < 200) {
+						lift.move_velocity(70);
+						pros::delay(100);
+						tray.move_velocity(175);
+						if(tray.get_position() > 205) {
+							tray.move_velocity(0);
+						}
+						if(lift.get_position() > 200) {
+							lift.move_velocity(0);
+						}
+						if(mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+							break;
+						}
+						//printf("%f\n", lift.get_position());
+					}
 				}
 				else if(macroHandler2 % 2 == 0) {
-					set_brake(1, tray);
-					set_brake(1, lift);
-					// while(lift.get_position() > 0 || tray.get_position() > 0) {
-					// 	lift.move_velocity(-70);
-					// 	pros::delay(200);
-					// 	tray.move_velocity(-100);
-					// 	if(tray.get_position() < 0) {
-					// 		tray.move_velocity(0);
-					// 	}
-					// 	if(lift.get_position() < 0) {
-					// 		lift.move_velocity(0);
-					// 	}
-					// 	if(tray.get_position() < 0 && lift.get_position() < 0) {
-					// 		break;
-					// 	}
-					// }
+					tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
+					while(lift.get_position() > 0 || tray.get_position() > 0) {
+						lift.move_velocity(-70);
+						pros::delay(200);
+						tray.move_velocity(-100);
+						if(tray.get_position() < 0) {
+							tray.move_velocity(0);
+						}
+						if(lift.get_position() < 0) {
+							lift.move_velocity(0);
+						}
+						if(tray.get_position() < 0 && lift.get_position() < 0) {
+							break;
+						}
+						//printf("%f\n", lift.get_position());
+					}
 				}
-				tray.move_absolute(0, -175);
-				pros::delay(100);
-				lift.move_absolute(0, -70);
-				set_brake(0, tray);
-				set_brake(0, lift);
+				tray.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+				lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 			}
 			if(tray.get_position() < 200) {
 				set_brake(0, intakeL);
@@ -174,5 +176,19 @@ void opcontrol() {
 			int trayPos = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 			trayHandler(trayPos);
 			pros::delay(20);
+
+			if(mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
+				while(tray.get_position() < 730) {
+					if(std::abs(mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y)) > 0) {
+						break;
+					}
+					traySpeed--;
+					tray.move(traySpeed);
+					pros::delay(60);
+				}
+			}
+			if(debug) {
+				printf("Pos: %f\n", obtainPositionF());
+			}
 		}
 }
