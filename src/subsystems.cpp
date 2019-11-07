@@ -6,7 +6,7 @@ Motor driveRF(1, E_MOTOR_GEARSET_06, false, E_MOTOR_ENCODER_ROTATIONS);
 Motor driveRB(2, E_MOTOR_GEARSET_06, true, E_MOTOR_ENCODER_ROTATIONS);
 Motor driveLF(3, E_MOTOR_GEARSET_06, true, E_MOTOR_ENCODER_ROTATIONS);
 Motor driveLB(4, E_MOTOR_GEARSET_06, false, E_MOTOR_ENCODER_ROTATIONS);
-Motor tray(5, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
+Motor tray(5, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor intakeR(6, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor intakeL(7, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor lift(8, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES);
@@ -28,6 +28,9 @@ void intakeHandler(int speed) {
     intakeL.move_velocity(speed);
 }
 void trayHandler(int trayPos) {
+  if(tray.get_position() < 25 && trayPos < 0) {
+    trayPos = 0;
+  }
   tray.move_velocity(trayPos);
 }
 void liftHandler(int liftInput) {
