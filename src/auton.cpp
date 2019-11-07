@@ -1,6 +1,6 @@
 #include "subsystems.hpp"
 void autonhandler() {
-  if(auton == 1) { //red front
+  if(auton == 1) { //red back
     clearDrive();
     pros::delay(200);
     smartDrive(215, 2500.0);
@@ -96,7 +96,7 @@ void autonhandler() {
       set_brake(1, driveRB);
       set_brake(1, driveRF);
       clearDrive();
-      while(lEncoder.get_value() > -150) {
+      while(lEncoder.get_value() > -185) {
         driveLF.move_velocity(-50);
         driveLB.move_velocity(-50);
         driveRF.move_velocity(50);
@@ -105,7 +105,7 @@ void autonhandler() {
       driveVel(0);
       intakeHandler(0);
       clearDrive();
-      while(obtainPositionF() < 360) {
+      while(obtainPositionF() < 300) {
         driveRF.move_velocity(100);
         driveRB.move_velocity(100);
         driveLB.move_velocity(100);
@@ -118,7 +118,7 @@ void autonhandler() {
       intakeHandler(0);
       tray.tare_position();
       int traySpeed = 140;
-      while(tray.get_position() < 730) {
+      while(tray.get_position() < 735) {
         traySpeed-=5;
         tray.move(traySpeed);
         pros::delay(60);
@@ -219,5 +219,13 @@ void autonhandler() {
     driveVel(-100);
     pros::delay(1000);
     driveVel(0);
+  }
+  else if(auton == 6) {
+    smartDrive(-200, -1000);
+    driveVel(0);
+    clearDrive();
+    smartDrive(200, 200);
+    driveVel(0);
+    clearDrive();
   }
 }
