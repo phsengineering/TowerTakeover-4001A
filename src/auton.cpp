@@ -4,10 +4,6 @@ void autonhandler() {
     clearDrive();
     pros::delay(200);
     smartDrive(215, 2500.0);
-    if(obtainPositionF() < 0 && part < 1) {
-      driveVel(0);
-    }
-    else {
       intakeHandler(190);
       set_brake(0, driveLB);
       set_brake(0, driveLF);
@@ -73,7 +69,6 @@ void autonhandler() {
       pros::delay(1000);
       driveVel(0);
     }
-  }
   else if(auton == 2) { //blue back
     clearDrive();
     pros::delay(200);
@@ -303,28 +298,32 @@ void autonhandler() {
 void autontest() {
   smartDrive(360, 2400);
   driveVel(0);
-  smartDrive(-100, -500);
+  smartDrive(-200, -1000);
   driveVel(0);
+  intakeHandler(0);
   clearDrive();
   driveRB.tare_position();
   driveRF.tare_position();
-  while(driveRF.get_position() < 85) {
-    printf("Right encoder on turn: %f\n", rEncoder.get_value());
-    driveLF.move_velocity(-100);
-    driveLB.move_velocity(-100);
-    driveRF.move_velocity(100);
-    driveRB.move_velocity(100);
+  while(driveRF.get_position() > -1885) {
+    driveLF.move_velocity(-200);
+    driveLB.move_velocity(-200);
+    driveRF.move_velocity(-120);
+    driveRB.move_velocity(-120);
   }
   driveVel(0);
-  clearDrive();
-  intakeHandler(0);
   set_brake(0, driveLB);
   set_brake(0, driveLF);
   set_brake(0, driveRB);
   set_brake(0, driveRF);
   pros::delay(50);
-  set_brake(1, driveLB);
-  set_brake(1, driveLF);
-  set_brake(1, driveRB);
-  set_brake(1, driveRF);
+  clearDrive();
+  while(driveLF.get_position() > -1885) {
+    driveLF.move_velocity(-120);
+    driveLB.move_velocity(-120);
+    driveRF.move_velocity(-200);
+    driveRB.move_velocity(-200);
+  }
+  driveVel(0);
+  clearDrive();
+  pros::delay(200);
 }
