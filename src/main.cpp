@@ -93,6 +93,9 @@ void opcontrol() {
       }
       while(tray.get_position() < 1620) {
         traySpeed/=2;
+        if (mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y) != 0 || mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X) != 0) {
+          break;
+        }
         if(traySpeed < 85) {
           traySpeed = 85;
         }
