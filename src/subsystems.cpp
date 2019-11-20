@@ -56,6 +56,10 @@ double obtainPositionF() {
   double right = rEncoder.get_value();
   return ((left+right)/2);
 }
+void obtainPositionRaw() {
+  printf("Right encoder value: %f\n", rEncoder.get_value());
+  printf("Left encoder value: %f\n", lEncoder.get_value());
+}
 void set_brake(int mode, Motor motor) {
   switch(mode) {
     case 0:

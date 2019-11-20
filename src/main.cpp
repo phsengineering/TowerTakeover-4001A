@@ -26,6 +26,10 @@ void opcontrol() {
   clearDrive();
   //autontest();
   while (true) {
+    obtainPositionRaw();
+    if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
+      clearDrive();
+    }
     count++;
     if ((!(count % 50)) && lift.get_temperature() > 55.0) {
       mainController.rumble(". -");

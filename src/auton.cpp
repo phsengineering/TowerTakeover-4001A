@@ -1,4 +1,5 @@
 #include "subsystems.hpp"
+int traySpeed = 200;
 void autonhandler() {
   if(auton == 1) { //red back
     clearDrive();
@@ -294,36 +295,109 @@ void autonhandler() {
     set_brake(1, driveRB);
     set_brake(1, driveRF);
   }
-}
-void autontest() {
-  smartDrive(360, 2400);
+else if(auton == 7) {
+  pros::delay(400);
+  smartDrive(300, 2500);
   driveVel(0);
-  smartDrive(-200, -1000);
+  smartDrive(-400, -600);
   driveVel(0);
   intakeHandler(0);
+  pros::delay(100);
   clearDrive();
-  driveRB.tare_position();
-  driveRF.tare_position();
-  while(driveRF.get_position() > -1885) {
-    driveLF.move_velocity(-200);
-    driveLB.move_velocity(-200);
-    driveRF.move_velocity(-120);
-    driveRB.move_velocity(-120);
+  set_brake(0, driveLB);
+  set_brake(0, driveLF);
+  set_brake(0, driveRB);
+  set_brake(0, driveRF);
+  while(lEncoder.get_value() > -70) {
+    driveLF.move_velocity(-75);
+    driveLB.move_velocity(-75);
+    driveRF.move_velocity(75);
+    driveRB.move_velocity(75);
+  }
+  driveVel(0);
+  intakeHandler(0);
+  set_brake(0, driveLB);
+  set_brake(0, driveLF);
+  set_brake(0, driveRB);
+  set_brake(0, driveRF);
+  pros::delay(100);
+  clearDrive();
+  while(lEncoder.get_value() > -1250) {
+    driveLF.move_velocity(-300);
+    driveLB.move_velocity(-300);
+    driveRF.move_velocity(-300);
+    driveRB.move_velocity(-300);
+  }
+  driveVel(0);
+  pros::delay(100);
+  clearDrive();
+  while(rEncoder.get_value() > -70) {
+    driveLF.move_velocity(75);
+    driveLB.move_velocity(75);
+    driveRF.move_velocity(-75);
+    driveRB.move_velocity(-75);
+  }
+  set_brake(0, driveLB);
+  set_brake(0, driveLF);
+  set_brake(0, driveRB);
+  set_brake(0, driveRF);
+  driveVel(0);
+  pros::delay(100);
+  clearDrive();
+  smartDrive(360, 1800);
+  driveVel(0);
+  pros::delay(100);
+  clearDrive();
+  while(lEncoder.get_value() > -1100) {
+    driveLF.move_velocity(-300);
+    driveLB.move_velocity(-300);
+    driveRF.move_velocity(-300);
+    driveRB.move_velocity(-300);
+    intakeHandler(195);
+  }
+  driveVel(0);
+  pros::delay(100);
+  clearDrive();
+  set_brake(1, driveLB);
+  set_brake(1, driveLF);
+  set_brake(1, driveRB);
+  set_brake(1, driveRF);
+  while(rEncoder.get_value() > -217) {
+    driveLF.move_velocity(75);
+    driveLB.move_velocity(75);
+    driveRF.move_velocity(-75);
+    driveRB.move_velocity(-75);
+  }
+  set_brake(0, driveLB);
+  set_brake(0, driveLF);
+  set_brake(0, driveRB);
+  set_brake(0, driveRF);
+  driveVel(0);
+  pros::delay(100);
+  set_brake(1, driveLB);
+  set_brake(1, driveLF);
+  set_brake(1, driveRB);
+  set_brake(1, driveRF);
+  while(lEncoder.get_value() < 1000) {
+    driveVel(80);
   }
   driveVel(0);
   set_brake(0, driveLB);
   set_brake(0, driveLF);
   set_brake(0, driveRB);
   set_brake(0, driveRF);
-  pros::delay(50);
-  clearDrive();
-  while(driveLF.get_position() > -1885) {
-    driveLF.move_velocity(-120);
-    driveLB.move_velocity(-120);
-    driveRF.move_velocity(-200);
-    driveRB.move_velocity(-200);
+  intakeHandler(0);
+  while(tray.get_position() < 1620) {
+    traySpeed/=2;
+    if(traySpeed < 85) {
+      traySpeed = 85;
+    }
+    tray.move_velocity(traySpeed);
+    if(tray.get_position() > 1620) {
+      tray.move_velocity(0);
+      break;
+    }
   }
-  driveVel(0);
-  clearDrive();
-  pros::delay(200);
+  tray.move_velocity(0);
+}
 }

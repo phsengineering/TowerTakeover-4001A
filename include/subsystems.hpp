@@ -12,7 +12,7 @@ extern Motor lift;
 extern ADIEncoder lEncoder;
 extern ADIEncoder rEncoder;
 static int part = 0;
-static int auton = 6;
+static int auton = 7; //runs case 7
 static bool debug = false;
 void autonhandler();
 void autontest();
@@ -28,3 +28,4 @@ double obtainPositionB();
 void smartDrive(int speed, double fPoint);
 void correct(int time, int speed, bool counter);
 void turnright(float turn);
+void obtainPositionRaw();
