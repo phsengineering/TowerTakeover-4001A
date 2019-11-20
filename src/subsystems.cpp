@@ -50,7 +50,6 @@ void clearDrive() {
   driveRF.tare_position();
   lEncoder.reset();
   rEncoder.reset();
-  //gyro.reset();
 }
 double obtainPositionF() {
   double left = lEncoder.get_value();
@@ -222,4 +221,87 @@ void moveLift() {
     }
     pros::delay(50);
   }
+}
+void turnright(float turn) {
+
+    int turn_power;
+    int set_turn_power;
+    int error;
+    bool acceleration = true;
+    float Kp1 = 0.75;
+    double encoder_turning_proportional = 3.85;
+
+    driveLF.tare_position();
+    driveRF.tare_position();
+
+    while (std::abs(driveLF.get_position()) / encoder_turning_proportional < turn) {
+        pros::delay(5);
+        printf("Turn Power: %f", turn_power);
+        error = turn - std::abs((driveLF.get_position() / encoder_turning_proportional));
+
+        acceleration = (std::abs(driveLF.get_position()) / encoder_turning_proportional < (turn * 0.2));
+
+        set_turn_power = (error * Kp1) * 2;
+
+        if (set_turn_power - 10 > turn_power && acceleration){
+            turn_power += 5;
+        }
+
+        else {
+            turn_power = set_turn_power;
+        }
+
+        if (turn_power < 20){
+            turn_power = 20;
+        }
+
+        else if (turn_power > 105){
+            turn_power = 105;
+        }
+
+        driveLF.move_velocity(turn_power);
+        driveLB.move_velocity(turn_power);
+        driveRF.move_velocity(-turn_power);
+        driveRB.move_velocity(-turn_power);
+    }
+
+    driveLF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveLB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveRF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveRB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+    pros::delay(100);
+
+    driveLF.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveLB.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveRF.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveRB.set_brake_mode(E_MOTOR_BRAKE_COAST);
+
+    int turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
+
+    while (turn_error > 20){
+        turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
+
+        driveRF.move_velocity(-turn_error);
+        driveRB.move_velocity(-turn_error);
+    }
+
+    while(turn_error < -20){
+        turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
+
+        driveRF.move_velocity(turn_error);
+        driveRB.move_velocity(turn_error);
+    }
+
+    driveLF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveLB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveRF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    driveRB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+    pros::delay(100);
+
+    driveLF.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveLB.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveRF.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    driveRB.set_brake_mode(E_MOTOR_BRAKE_COAST);
 }

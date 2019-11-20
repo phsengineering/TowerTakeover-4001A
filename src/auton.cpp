@@ -39,6 +39,11 @@ void autonhandler() {
       driveVel(0);
       intakeHandler(0);
       clearDrive();
+      set_brake(0, driveLB);
+      set_brake(0, driveLF);
+      set_brake(0, driveRB);
+      set_brake(0, driveRF);
+      pros::delay(50);
       while(obtainPositionF() < 360) {
         driveRF.move_velocity(100);
         driveRB.move_velocity(100);
@@ -108,6 +113,15 @@ void autonhandler() {
       driveVel(0);
       intakeHandler(0);
       clearDrive();
+      set_brake(0, driveLB);
+      set_brake(0, driveLF);
+      set_brake(0, driveRB);
+      set_brake(0, driveRF);
+      pros::delay(50);
+      set_brake(1, driveLB);
+      set_brake(1, driveLF);
+      set_brake(1, driveRB);
+      set_brake(1, driveRF);
       while(obtainPositionF() < 300) {
         driveRF.move_velocity(100);
         driveRB.move_velocity(100);
@@ -148,6 +162,15 @@ void autonhandler() {
     }
     clearDrive();
     intakeHandler(0);
+    set_brake(0, driveLB);
+    set_brake(0, driveLF);
+    set_brake(0, driveRB);
+    set_brake(0, driveRF);
+    pros::delay(50);
+    set_brake(1, driveLB);
+    set_brake(1, driveLF);
+    set_brake(1, driveRB);
+    set_brake(1, driveRF);
     smartDrive(200, 950);
     intakeHandler(0);
     clearDrive();
@@ -157,6 +180,16 @@ void autonhandler() {
       driveRF.move_velocity(50);
       driveRB.move_velocity(50);
     }
+    driveVel(0);
+    set_brake(0, driveLB);
+    set_brake(0, driveLF);
+    set_brake(0, driveRB);
+    set_brake(0, driveRF);
+    pros::delay(50);
+    set_brake(1, driveLB);
+    set_brake(1, driveLF);
+    set_brake(1, driveRB);
+    set_brake(1, driveRF);
     smartDrive(200, 625);
     driveVel(0);
     pros::delay(100);
@@ -192,6 +225,15 @@ void autonhandler() {
     }
     clearDrive();
     intakeHandler(0);
+    set_brake(0, driveLB);
+    set_brake(0, driveLF);
+    set_brake(0, driveRB);
+    set_brake(0, driveRF);
+    pros::delay(50);
+    set_brake(1, driveLB);
+    set_brake(1, driveLF);
+    set_brake(1, driveRB);
+    set_brake(1, driveRF);
     smartDrive(200, 875);
     intakeHandler(0);
     clearDrive();
@@ -201,6 +243,16 @@ void autonhandler() {
       driveRF.move_velocity(-50);
       driveRB.move_velocity(-50);
     }
+    driveVel(0);
+    set_brake(0, driveLB);
+    set_brake(0, driveLF);
+    set_brake(0, driveRB);
+    set_brake(0, driveRF);
+    pros::delay(50);
+    set_brake(1, driveLB);
+    set_brake(1, driveLF);
+    set_brake(1, driveRB);
+    set_brake(1, driveRF);
     smartDrive(200, 270);
     driveVel(0);
     pros::delay(100);
@@ -224,11 +276,55 @@ void autonhandler() {
     driveVel(0);
   }
   else if(auton == 6) {
-    smartDrive(-200, -1000);
+    smartDrive(360, 2400);
+    driveVel(0);
+    smartDrive(-100, -500);
     driveVel(0);
     clearDrive();
-    smartDrive(200, 200);
-    driveVel(0);
+    while(rEncoder.get_value() < 120) {
+      driveLF.move_velocity(-100);
+      driveLB.move_velocity(-100);
+      driveRF.move_velocity(100);
+      driveRB.move_velocity(100);
+    }
     clearDrive();
+    intakeHandler(0);
+    set_brake(0, driveLB);
+    set_brake(0, driveLF);
+    set_brake(0, driveRB);
+    set_brake(0, driveRF);
+    pros::delay(50);
+    set_brake(1, driveLB);
+    set_brake(1, driveLF);
+    set_brake(1, driveRB);
+    set_brake(1, driveRF);
   }
+}
+void autontest() {
+  smartDrive(360, 2400);
+  driveVel(0);
+  smartDrive(-100, -500);
+  driveVel(0);
+  clearDrive();
+  driveRB.tare_position();
+  driveRF.tare_position();
+  while(driveRF.get_position() < 85) {
+    printf("Right encoder on turn: %f\n", rEncoder.get_value());
+    driveLF.move_velocity(-100);
+    driveLB.move_velocity(-100);
+    driveRF.move_velocity(100);
+    driveRB.move_velocity(100);
+  }
+  driveVel(0);
+  clearDrive();
+  intakeHandler(0);
+  set_brake(0, driveLB);
+  set_brake(0, driveLF);
+  set_brake(0, driveRB);
+  set_brake(0, driveRF);
+  pros::delay(50);
+  set_brake(1, driveLB);
+  set_brake(1, driveLF);
+  set_brake(1, driveRB);
+  set_brake(1, driveRF);
 }

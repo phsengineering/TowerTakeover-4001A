@@ -19,10 +19,12 @@ void autonomous() {
 void opcontrol() {
   int count = 0;
   int intakeCount = 0;
+  int traySpeed;
   pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
   set_brake(1, lift);
   set_brake(1, tray);
   clearDrive();
+  //autontest();
   while (true) {
     count++;
     if ((!(count % 50)) && lift.get_temperature() > 55.0) {
@@ -81,12 +83,27 @@ void opcontrol() {
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_LEFT)) {
-      tray.move_absolute(1600, 100);
+      traySpeed = 200;
+      while(tray.get_position() < 400) {
+        tray.move_velocity(traySpeed);
+      }
+      while(tray.get_position() < 1620) {
+        traySpeed/=2;
+        if(traySpeed < 85) {
+          traySpeed = 85;
+        }
+        tray.move_velocity(traySpeed);
+        if(tray.get_position() > 1620) {
+          tray.move_velocity(0);
+        }
+      }
+      tray.move_velocity(0);
+      //tray.move_absolute(1600, 160);
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_RIGHT)) {
       tray.move_absolute(2, -200);
     }
+    pros::delay(50);
   }
-  pros::delay(20);
 }
