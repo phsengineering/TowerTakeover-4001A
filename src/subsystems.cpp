@@ -13,6 +13,7 @@ Motor lift(8, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES);
 ADIEncoder lEncoder(5, 6);
 ADIEncoder rEncoder(1, 2);
 ADIEncoder mEncoder(3, 4);
+
 void drive(int y, int r)
 {
     //Scale up y and r from 127 to 12000
@@ -173,122 +174,11 @@ void correct(int time, int speed, bool counter) {
   }
   driveVel(0);
 }
-void resetLift() {
-  tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  while(lift.get_position() > 0 || tray.get_position() > 0) {
-    lift.move_velocity(-70);
-    pros::delay(200);
-    tray.move_velocity(-100);
-    if(tray.get_position() < 2) {
-      tray.move_velocity(0);
-    }
-    if(lift.get_position() < 0) {
-      lift.move_velocity(0);
-    }
-    if(tray.get_position() < 2 && lift.get_position() < 0) {
-      break;
-    }
-    pros::delay(50);
+void set_drive(int mode) {
+  Motor driveGroup [4] = { driveLB, driveLF, driveRF, driveRB };
+  for(int i = 0; i < 4; i++) {
+    set_brake(mode, driveGroup[i]);
   }
-}
-void moveLift() {
-  tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  while(lift.get_position() < 205 || tray.get_position() < 200) {
-    lift.move_velocity(70);
-    pros::delay(100);
-    tray.move_velocity(175);
-    if(tray.get_position() > 205) {
-      tray.move_velocity(0);
-    }
-    if(lift.get_position() > 200) {
-      lift.move_velocity(0);
-    }
-    pros::delay(50);
-  }
-}
-void turnright(float turn) {
-
-    int turn_power;
-    int set_turn_power;
-    int error;
-    bool acceleration = true;
-    float Kp1 = 0.75;
-    double encoder_turning_proportional = 3.85;
-
-    driveLF.tare_position();
-    driveRF.tare_position();
-
-    while (std::abs(driveLF.get_position()) / encoder_turning_proportional < turn) {
-        pros::delay(5);
-        error = turn - std::abs((driveLF.get_position() / encoder_turning_proportional));
-
-        acceleration = (std::abs(driveLF.get_position()) / encoder_turning_proportional < (turn * 0.2));
-
-        set_turn_power = (error * Kp1) * 2;
-
-        if (set_turn_power - 10 > turn_power && acceleration){
-            turn_power += 5;
-        }
-
-        else {
-            turn_power = set_turn_power;
-        }
-
-        if (turn_power < 20){
-            turn_power = 20;
-        }
-
-        else if (turn_power > 105){
-            turn_power = 105;
-        }
-
-        driveLF.move_velocity(turn_power);
-        driveLB.move_velocity(turn_power);
-        driveRF.move_velocity(-turn_power);
-        driveRB.move_velocity(-turn_power);
-    }
-
-    driveLF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveLB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveRF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveRB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-
-    pros::delay(100);
-
-    driveLF.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveLB.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveRF.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveRB.set_brake_mode(E_MOTOR_BRAKE_COAST);
-
-    int turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
-
-    while (turn_error > 20){
-        turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
-
-        driveRF.move_velocity(-turn_error);
-        driveRB.move_velocity(-turn_error);
-    }
-
-    while(turn_error < -20){
-        turn_error = std::abs(driveLF.get_position()) - std::abs(driveRF.get_position());
-
-        driveRF.move_velocity(turn_error);
-        driveRB.move_velocity(turn_error);
-    }
-
-    driveLF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveLB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveRF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-    driveRB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-
-    pros::delay(100);
-
-    driveLF.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveLB.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveRF.set_brake_mode(E_MOTOR_BRAKE_COAST);
-    driveRB.set_brake_mode(E_MOTOR_BRAKE_COAST);
 }
 void positionTrack() {
 

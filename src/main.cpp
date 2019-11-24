@@ -95,22 +95,8 @@ void opcontrol() {
       while(tray.get_position() < 400) {
         tray.move_velocity(traySpeed);
       }
-      while(tray.get_position() < 1620) {
-        traySpeed/=2;
-        if (mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y) != 0 || mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X) != 0) {
-          break;
-        }
-        if(traySpeed < 85) {
-          traySpeed = 85;
-        }
-        tray.move_velocity(traySpeed);
-        if(tray.get_position() > 1620) {
-          tray.move_velocity(0);
-        }
-      }
-      tray.move_velocity(0);
-      //tray.move_absolute(1600, 160);
-    }
+      int trayVel = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
+      trayHandler(trayVel);
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_RIGHT)) {
       tray.move_absolute(2, -200);
@@ -118,4 +104,5 @@ void opcontrol() {
     pros::delay(50);
     positionTrack();
   }
+}
 }
