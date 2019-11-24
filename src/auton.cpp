@@ -400,4 +400,13 @@ else if(auton == 7) {
   }
   tray.move_velocity(0);
 }
+  else if(auton == 8) {
+    while(theta < 90) {
+      driveLF.move_velocity(75);
+      driveLB.move_velocity(75);
+      driveRF.move_velocity(-75);
+      driveRB.move_velocity(-75);
+    }
+    driveVel(0);
+  }
 }

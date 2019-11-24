@@ -10,8 +10,9 @@ Motor tray(5, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor intakeR(6, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor intakeL(7, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor lift(8, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES);
-ADIEncoder lEncoder(1, 2, false);
-ADIEncoder rEncoder(3, 4, true);
+ADIEncoder lEncoder(5, 6);
+ADIEncoder rEncoder(1, 2);
+ADIEncoder mEncoder(3, 4);
 void drive(int y, int r)
 {
     //Scale up y and r from 127 to 12000
@@ -37,7 +38,6 @@ void liftHandler(int liftInput) {
   lift.move_velocity(liftInput);
 }
 void driveVel(int updateSpeed) {
-  printf("%d", driveLB.get_actual_velocity());
   driveLF.move_velocity(updateSpeed);
   driveLB.move_velocity(updateSpeed);
   driveRB.move_velocity(updateSpeed);
@@ -56,10 +56,6 @@ double obtainPositionF() {
   double right = rEncoder.get_value();
   return ((left+right)/2);
 }
-void obtainPositionRaw() {
-  printf("Right encoder value: %f\n", rEncoder.get_value());
-  printf("Left encoder value: %f\n", lEncoder.get_value());
-}
 void set_brake(int mode, Motor motor) {
   switch(mode) {
     case 0:
@@ -69,20 +65,6 @@ void set_brake(int mode, Motor motor) {
     case 2:
       motor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
   }
-}
-void smartDriveFor(int speed, double fPoint) {
-  clearDrive();
-  while(obtainPositionF() < fPoint) {
-    driveVel(speed);
-  }
-  driveVel(0);
-}
-void smartDriveBack(int speed, double fPoint) {
-  clearDrive();
-  while(obtainPositionF() > fPoint) {
-    driveVel(speed);
-  }
-  driveVel(0);
 }
 void smartDrive(int speed, double fPoint) {
   clearDrive();
@@ -240,7 +222,6 @@ void turnright(float turn) {
 
     while (std::abs(driveLF.get_position()) / encoder_turning_proportional < turn) {
         pros::delay(5);
-        printf("Turn Power: %f", turn_power);
         error = turn - std::abs((driveLF.get_position() / encoder_turning_proportional));
 
         acceleration = (std::abs(driveLF.get_position()) / encoder_turning_proportional < (turn * 0.2));
@@ -308,4 +289,31 @@ void turnright(float turn) {
     driveLB.set_brake_mode(E_MOTOR_BRAKE_COAST);
     driveRF.set_brake_mode(E_MOTOR_BRAKE_COAST);
     driveRB.set_brake_mode(E_MOTOR_BRAKE_COAST);
+}
+void positionTrack() {
+
+    // Can multiply these by a scalar to get the values in inches, or whatever unit you'd like your x and y coordinates to be in.
+    double dR = rEncoder.get_value() - lastEncoderValueR;
+    double dL = lEncoder.get_value() - lastEncoderValueL;
+    double dM = mEncoder.get_value() - lastEncoderValueM;
+
+    double dS = (dR + dL) / 2.0;  // Distance robot traveled since last checked.
+    double dTheta = (dR - dL) / chassisWidth;  // Change in angle robot turned since last checked. Where chassisWidth is the distance between your left and right tracking wheels.
+
+    double avgTheta = theta + dTheta / 2.0;  // Angle robot is assumed to have been facing when moving dS.
+
+    // Change in x and y position since last checked.
+    double dX = dS * cos(avgTheta) + dM * sin(avgTheta);
+    double dY = dS * sin(avgTheta) - dM * cos(avgTheta);
+
+    // Update current robot position.
+    x += dX;
+    y += dY;
+    theta += dTheta;
+    printf("X Position: %f\n", x);
+    printf("Y Position: %f\n", y);
+    printf("Theta disp Position: %f\n", theta);
+    lastEncoderValueL = lEncoder.get_value();
+    lastEncoderValueR = rEncoder.get_value();
+    lastEncoderValueM = mEncoder.get_value();
 }

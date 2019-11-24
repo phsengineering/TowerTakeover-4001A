@@ -14,6 +14,7 @@ void competition_initialize() {}
 
 void autonomous() {
   autonhandler();
+  //okapilibauton();
 }
 
 void opcontrol() {
@@ -24,9 +25,12 @@ void opcontrol() {
   set_brake(1, lift);
   set_brake(1, tray);
   clearDrive();
-  //autontest();
   while (true) {
-    obtainPositionRaw();
+    if(debug) {
+      printf("Raw left: %f\n", lEncoder.get_value());
+      printf("Raw mid: %f\n", mEncoder.get_value());
+      printf("Raw right: %f\n", rEncoder.get_value());
+    }
     if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
       clearDrive();
     }
@@ -112,5 +116,6 @@ void opcontrol() {
       tray.move_absolute(2, -200);
     }
     pros::delay(50);
+    positionTrack();
   }
 }
