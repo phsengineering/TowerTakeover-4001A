@@ -14,7 +14,6 @@ void competition_initialize() {}
 
 void autonomous() {
   autonhandler();
-  //okapilibauton();
 }
 
 void opcontrol() {
@@ -22,15 +21,10 @@ void opcontrol() {
   int intakeCount = 0;
   int traySpeed;
   pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
-  set_brake(1, lift);
-  set_brake(1, tray);
+  set_brake(COAST, lift);
+  set_brake(COAST, tray);
   clearDrive();
   while (true) {
-    if(debug) {
-      printf("Raw left: %f\n", lEncoder.get_value());
-      printf("Raw mid: %f\n", mEncoder.get_value());
-      printf("Raw right: %f\n", rEncoder.get_value());
-    }
     if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
       clearDrive();
     }
@@ -83,26 +77,17 @@ void opcontrol() {
     }
 
     if (tray.get_position() < 200) {
-      set_brake(0, intakeL);
-      set_brake(0, intakeR);
+      set_brake(HOLD, intakeL);
+      set_brake(HOLD, intakeR);
     } else {
-      set_brake(1, intakeL);
-      set_brake(1, intakeR);
+      set_brake(COAST, intakeL);
+      set_brake(COAST, intakeR);
     }
-
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_LEFT)) {
-      traySpeed = 200;
-      while(tray.get_position() < 400) {
-        tray.move_velocity(traySpeed);
-      }
+    if(!mainController.get_digital(E_CONTROLLER_DIGITAL_A) && !mainController.get_digital(E_CONTROLLER_DIGITAL_L2) && !mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       int trayVel = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
       trayHandler(trayVel);
-
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_RIGHT)) {
-      tray.move_absolute(2, -200);
     }
-    pros::delay(50);
     positionTrack();
+    pros::delay(50);
   }
-}
 }
