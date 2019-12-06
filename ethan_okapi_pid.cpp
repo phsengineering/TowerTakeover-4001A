@@ -15,7 +15,7 @@ const double drivemoveThreshold = 0.0;
 const double driveturnThreshold = 0.0;
 //const double driveVelDelta = 0.001;
 
-/* idk if this is necessary 
+/*  
 auto drive = ChassisControllerBuilder()
     .withMotors({1, -2}, {-3, 4})
     .withGearset(AbstractMotor::gearset::blue)
@@ -27,7 +27,7 @@ auto drive = ChassisControllerBuilder()
     .build()
 */
     
-auto odom = OdomControllerBuilder()
+auto odom = ChassisControllerBuilder()
     .withMotors({1, -2}, {-3, 4})
     .withGearset(AbstractMotor::gearset::blue)
     .withGearset(5/3)
@@ -37,6 +37,7 @@ auto odom = OdomControllerBuilder()
     .withOdometry({2.75, odomTrack, odomMiddleDist, 2.75}, FRAME_TRANSFORMATION, drivemoveThreshold, driveturnThreshold)
     //.withLogger(const std::shared_ptr<Logger>& ilogger)
     .buildOdometry()
+    .build();
 
 auto pathgen = AsyncMotionProfileControllerBuilder()
     .withLimits({maxVel, maxAccel, maxJerk})
