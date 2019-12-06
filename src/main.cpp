@@ -42,11 +42,11 @@ void opcontrol() {
     }
     drive(y, r);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-      intakeHandler(190);
+      intakeHandler(200);
     } else if (mainController.get_digital(E_CONTROLLER_DIGITAL_R2)) {
       intakeHandler(-95);
     } else if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
-      intakeHandler(-195);
+      intakeHandler(-185);
     } else if (!mainController.get_digital(E_CONTROLLER_DIGITAL_Y) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R1) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R2) && intakeCount % 2 == 0) {
       intakeHandler(0);
     } else if (mainController.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
