@@ -151,4 +151,7 @@ void autonhandler() {
     }
     driveVel(0);
   }
+  else if(auton == 8) {
+    movingbeans();
+  }
 }
