@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+using namespace pros;
 extern Motor driveRF;
 extern Motor driveRB;
 extern Motor driveLF;
@@ -33,13 +34,14 @@ void set_brake(int mode, Motor motor);
 void set_drive(int mode);
 void clearDrive();
 double obtainPositionF();
-double obtainPositionB();
 void smartDrive(int speed, double fPoint);
 void correct(int time, int speed, bool counter);
 void turnright(float turn);
-void obtainPositionRaw();
 void positionTrack();
 void redFront();
 void redBack();
 void blueFront();
 void blueBack();
+void auton5();
+void auton6();
+void movingbeans();
