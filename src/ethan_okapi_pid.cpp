@@ -1,4 +1,4 @@
-#include "subsystems.hpp"
+//#include "subsystems.hpp"
 #include "okapi/api.hpp"
 using namespace okapi;
 
@@ -17,7 +17,7 @@ const double driveturnThreshold = 0.0;
 auto odom = ChassisControllerBuilder()
     .withMotors({1, 2}, {3, -4})
     .withGearset(AbstractMotor::gearset::blue)
-    .withSensors({'E', 'F'}, {'A', 'B',true})
+    .withSensors({'E', 'F', false}, {'A', 'B', false}, {'C', 'D', true})
     .withDimensions({{3.25, 9}, imev5BlueTPR})
     //.withGearset(5.0/3.0)
     .withGains(
@@ -47,7 +47,7 @@ void beans(){
 }
 
 void movingbeans() {
-  intakeHandler(200);
+  //intakeHandler(200);
   beans();
   pathgen->setTarget("bean1");
   settle();
@@ -55,5 +55,5 @@ void movingbeans() {
   settle();
   pathgen->setTarget("bean3");
   settle();
-  intakeHandler(0);
+  //intakeHandler(0);
 }

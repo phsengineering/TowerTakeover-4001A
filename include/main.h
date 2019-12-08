@@ -50,7 +50,7 @@
  * concurrently! The okapi namespace will export all symbols inside the pros
  * namespace.
  */
-using namespace pros;
+//using namespace pros;
 // using namespace pros::literals;
 // using namespace okapi;
 

@@ -1,6 +1,7 @@
 #include "subsystems.hpp"
 #include <sstream>
 #include <string>
+using namespace pros;
 void resetLift() {
   tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
   lift.set_brake_mode(E_MOTOR_BRAKE_COAST);

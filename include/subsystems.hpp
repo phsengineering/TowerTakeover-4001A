@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+using namespace pros;
 extern Motor driveRF;
 extern Motor driveRB;
 extern Motor driveLF;

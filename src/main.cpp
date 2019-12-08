@@ -2,7 +2,7 @@
 #include "main.h"
 #include "subsystems.hpp"
 
-
+using namespace pros;
 void initialize() {
   pros::lcd::initialize();
   pros::lcd::set_text(1, "Hello World!");
