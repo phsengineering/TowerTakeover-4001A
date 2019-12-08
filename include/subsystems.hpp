@@ -14,7 +14,7 @@ extern ADIEncoder rEncoder;
 extern ADIEncoder mEncoder;
 enum brake_modes {HOLD = 0, COAST = 1, BRAKE = 2};
 static int part = 0;
-static int auton = 8; //runs case 7
+static int auton = 7; //runs case 7
 static double chassisWidth = 5.0;
 static bool debug = false;
 static double lastEncoderValueL = 0;
@@ -34,14 +34,14 @@ void set_brake(int mode, Motor motor);
 void set_drive(int mode);
 void clearDrive();
 double obtainPositionF();
-double obtainPositionB();
 void smartDrive(int speed, double fPoint);
 void correct(int time, int speed, bool counter);
 void turnright(float turn);
-void obtainPositionRaw();
 void positionTrack();
 void redFront();
 void redBack();
 void blueFront();
 void blueBack();
+void auton5();
+void auton6();
 void movingbeans();
