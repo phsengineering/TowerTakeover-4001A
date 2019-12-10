@@ -81,7 +81,7 @@ void smartDrive(int speed, double fPoint) {
         driveVel(0);
       }
       if(updateSpeed < speed) {
-        updateSpeed+=30;
+        updateSpeed+=30;// previously 30 for reference
       }
       intakeHandler(190);
       if(debug) {
@@ -98,7 +98,7 @@ void smartDrive(int speed, double fPoint) {
         driveVel(0);
       }
       if(updateSpeed > 0) {
-        updateSpeed-=30;
+        updateSpeed-=30;//previously 30 for reference
       }
       if(updateSpeed == 0) {
         break;
@@ -189,7 +189,7 @@ void positionTrack() {
     double dM = mEncoder.get_value() - lastEncoderValueM;
 
     double dS = (dR + dL) / 2.0;  // Distance robot traveled since last checked.
-    double dTheta = (dR - dL) / chassisWidth;  // Change in angle robot turned since last checked. Where chassisWidth is the distance between your left and right tracking wheels.
+    double dTheta = (dM*556.0) / (chassisWidth);  // Change in angle robot turned since last checked. Where chassisWidth is the distance between your left and right tracking wheels.
 
     double avgTheta = theta + dTheta / 2.0;  // Angle robot is assumed to have been facing when moving dS.
 
@@ -201,9 +201,12 @@ void positionTrack() {
     x += dX;
     y += dY;
     theta += dTheta;
-    printf("X Position: %f\n", x);
-    printf("Y Position: %f\n", y);
-    printf("Theta disp Position: %f\n", theta);
+    if (debug) {
+      printf("X Position: %f\n", x);
+      printf("Middle encoder: %d\n", mEncoder.get_value());
+      printf("Y Position: %f\n", y);
+      printf("Theta disp Position: %f\n", theta);
+    }
     lastEncoderValueL = lEncoder.get_value();
     lastEncoderValueR = rEncoder.get_value();
     lastEncoderValueM = mEncoder.get_value();

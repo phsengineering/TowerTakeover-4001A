@@ -6,6 +6,7 @@ using namespace pros;
 void initialize() {
   pros::lcd::initialize();
   pros::lcd::set_text(1, "Hello World!");
+  pros::delay(200);
 }
 
 void disabled() {}
@@ -15,8 +16,8 @@ void competition_initialize() {}
 void autonomous() {
   autonhandler();
 }
-
 void opcontrol() {
+
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
@@ -42,14 +43,12 @@ void opcontrol() {
     }
     drive(y, r);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-      intakeHandler(190);
+      intakeHandler(200);
     } else if (mainController.get_digital(E_CONTROLLER_DIGITAL_R2)) {
-      intakeHandler(-95);
-    } else if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
-      intakeHandler(-195);
-    } else if (!mainController.get_digital(E_CONTROLLER_DIGITAL_Y) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R1) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R2) && intakeCount % 2 == 0) {
+      intakeHandler(-100);
+    } else if (!mainController.get_digital(E_CONTROLLER_DIGITAL_R2) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R1) && !mainController.get_digital(E_CONTROLLER_DIGITAL_R2) && intakeCount % 2 == 0) {
       intakeHandler(0);
-    } else if (mainController.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
+    } else if (mainController.get_digital_new_press(E_CONTROLLER_DIGITAL_R2)) {
       intakeCount++;
       if (intakeCount % 2 == 1) {
         intakeHandler(40);
@@ -59,21 +58,25 @@ void opcontrol() {
     } else {
       intakeHandler(0);
     }
-
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
+    set_brake(HOLD, lift);
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
+      tray.move_absolute(690, 200);
+      delay(200);
       lift.move_absolute(200, 115);
-      tray.move_absolute(650, 200);
     }
 
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L2)) {
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
+      // intakeR.move_absolute(-5, -200);
+      // intakeL.move_absolute(-05, -200);
+      tray.move_absolute(800, 200);
+      delay(150);
       lift.move_absolute(325, 115);
-      tray.move_absolute(650, 200);
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
-      lift.move_absolute(2, -70);
-      delay(40);
-      tray.move_absolute(2, -200);
+      lift.move_absolute(0, -70);
+      delay(200);
+      tray.move_absolute(0, -200);
     }
 
     if (tray.get_position() < 200) {
@@ -83,9 +86,20 @@ void opcontrol() {
       set_brake(COAST, intakeL);
       set_brake(COAST, intakeR);
     }
-    if(!mainController.get_digital(E_CONTROLLER_DIGITAL_A) && !mainController.get_digital(E_CONTROLLER_DIGITAL_L2) && !mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L2) ) {
       int trayVel = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
-      trayHandler(trayVel);
+      if(tray.get_position() > 1610 &&  trayVel < 0) {
+        trayHandler(0);
+      }
+      else {
+        trayHandler(trayVel);
+      }
+    }
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+      intakeL.move_velocity(-100);
+    }
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
+      mEncoder.reset();
     }
     positionTrack();
     pros::delay(50);
