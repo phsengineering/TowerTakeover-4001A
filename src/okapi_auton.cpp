@@ -25,20 +25,20 @@ TimeUtil test = TimeUtilFactory::createDefault();
 auto chassis = ChassisControllerBuilder()
     .withMotors({4, 3}, {2, 1})
     .withGearset({AbstractMotor::gearset::blue, 5/3})
-    //.withSensors(ADIEncoder('E', 'F', false), ADIEncoder('A', 'B', false), ADIEncoder('C', 'D', false))
-    //.withDimensions({{2.75, 4.5, 4.25, 2.75}, imev5BlueTPR})
+    .withSensors({'E', 'F', false}, {'A', 'B', false}, {'C', 'D', false})
+    //.withDimensions({{3.25, 9.25}, imev5BlueTPR})
     //.withGearset(5.0/3.0)
-    .withGains(
-        { 0.001, 0, 0.0000 }, // Distance controller gains
-        { 0.0025, 0, 0.0000 }, // Turn controller gains
-        { 0.0001, 0, 0.0000 }  // Angle controller gains (helps drive straight)
-    )
+     .withGains(
+         { 0.001, 0, 0.0000 }, // Distance controller gains
+         { 0.0025, 0, 0.0000 }, // Turn controller gains
+         { 0.0001, 0, 0.0000 }  // Angle controller gains (helps drive straight)
+     )
     .withMaxVoltage(10000)
-    .withDerivativeFilters(
-      std::make_unique<AverageFilter<3>>(),
-      std::make_unique<AverageFilter<3>>(),
-      std::make_unique<AverageFilter<3>>()
-    )
+     .withDerivativeFilters(
+       std::make_unique<AverageFilter<3>>(),
+       std::make_unique<AverageFilter<3>>(),
+       std::make_unique<AverageFilter<3>>()
+     )
     //.withChassisControllerTimeUtilFactory(TimeUtilFactory(50, 5, 250_ms))
     //.withOdometry({2.75, odomTrack, odomMiddleDist, 2.75}, drivemoveThreshold, driveturnThreshold)
     //.withOdometry(okapi::StateMode::FRAME_TRANSFORMATION, 0_ft, 0_deg, 0.00001_mps)
@@ -52,7 +52,7 @@ auto pathgen = AsyncMotionProfileControllerBuilder()
     .buildMotionProfileController();
 
 void movingbeans () {
-  chassis->turnAngle(90_deg);
+  chassis->turnAngle(150_deg);
   chassis->waitUntilSettled();
   //pathgen->setTarget("A");
   //pathgen->waitUntilSettled();

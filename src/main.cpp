@@ -30,7 +30,7 @@ void opcontrol() {
       clearDrive();
     }
     count++;
-    if ((!(count % 50)) && lift.get_temperature() > 55.0) {
+    if ((!(count % 50)) && lift.is_over_temp()) {
       mainController.rumble(". -");
     }
     //Drive
@@ -61,16 +61,14 @@ void opcontrol() {
     set_brake(HOLD, lift);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
       tray.move_absolute(690, 200);
-      delay(200);
-      lift.move_absolute(200, 115);
+      lift.move_absolute(200, 150);
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       // intakeR.move_absolute(-5, -200);
       // intakeL.move_absolute(-05, -200);
       tray.move_absolute(800, 200);
-      delay(150);
-      lift.move_absolute(325, 115);
+      lift.move_absolute(325, 150);
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
