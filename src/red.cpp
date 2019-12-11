@@ -105,3 +105,21 @@ void redFront() {
   pros::delay(1500);
   driveVel(0);
 }
+void okapiAuton() {
+  clearDrive();
+  pros::delay(200);
+  smartDrive(215, 2500.0);
+  intakeHandler(190);
+  set_drive(HOLD);
+  pros::delay(50);
+  set_drive(COAST);
+  clearDrive();
+  smartDrive(-280, -300.0);
+  set_drive(HOLD);
+  pros::delay(50);
+  set_drive(COAST);
+  clearDrive();
+  pros::delay(100);
+  turn40();
+
+}

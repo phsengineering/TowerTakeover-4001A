@@ -16,7 +16,7 @@ enum brake_modes {HOLD = 0, COAST = 1, BRAKE = 2};
 static int part = 0;
 static int auton = 7; //runs case 7
 static double chassisWidth = 2.5;
-static bool debug = true;
+static bool debug = false;
 static double lastEncoderValueL = 0;
 static double lastEncoderValueM = 0;
 static double lastEncoderValueR = 0;
@@ -44,4 +44,5 @@ void blueFront();
 void blueBack();
 void auton5();
 void auton6();
-void movingbeans();
+void turn40();
+void okapiAuton();

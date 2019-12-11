@@ -15,6 +15,6 @@ void autonhandler() {
     case 6:
       auton6();
     case 7:
-      movingbeans();
+      okapiAuton();
   }
 }

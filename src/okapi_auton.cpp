@@ -30,11 +30,11 @@ auto chassis = ChassisControllerBuilder()
     //.withGearset(5.0/3.0)
      .withGains(
          { 0.001, 0, 0.0000 }, // Distance controller gains
-         { 0.0025, 0, 0.0000 }, // Turn controller gains
+         { 0.0026, 0.0, 0.0000 }, // Turn controller gains
          { 0.0001, 0, 0.0000 }  // Angle controller gains (helps drive straight)
      )
     .withMaxVoltage(10000)
-     .withDerivativeFilters(
+    .withDerivativeFilters(
        std::make_unique<AverageFilter<3>>(),
        std::make_unique<AverageFilter<3>>(),
        std::make_unique<AverageFilter<3>>()
@@ -51,8 +51,8 @@ auto pathgen = AsyncMotionProfileControllerBuilder()
     .withOutput(chassis)
     .buildMotionProfileController();
 
-void movingbeans () {
-  chassis->turnAngle(150_deg);
+void turn40 () {
+  chassis->turnAngle(-55_deg);
   chassis->waitUntilSettled();
   //pathgen->setTarget("A");
   //pathgen->waitUntilSettled();
