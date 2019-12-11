@@ -17,7 +17,7 @@ void autonomous() {
   autonhandler();
 }
 void opcontrol() {
-
+  autonhandler();
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
@@ -98,8 +98,13 @@ void opcontrol() {
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
       mEncoder.reset();
+      lEncoder.reset();
+      rEncoder.reset();
     }
-    positionTrack();
+    printf("Left encoder: %d\n", lEncoder.get_value());
+    printf("Right encoder: %d\n", rEncoder.get_value());
+    printf("Middle encoder: %d\n", mEncoder.get_value());
+
     pros::delay(50);
   }
 }

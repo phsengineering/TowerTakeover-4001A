@@ -45,4 +45,6 @@ void blueBack();
 void auton5();
 void auton6();
 void turn40();
+void turnBack();
+void turn3();
 void okapiAuton();

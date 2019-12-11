@@ -52,7 +52,19 @@ auto pathgen = AsyncMotionProfileControllerBuilder()
     .buildMotionProfileController();
 
 void turn40 () {
-  chassis->turnAngle(-55_deg);
+  chassis->turnAngle(-59_deg); //155 is equal to a 90 for some reason
+  chassis->waitUntilSettled();
+  //pathgen->setTarget("A");
+  //pathgen->waitUntilSettled();
+}
+void turnBack () {
+  chassis->turnAngle(59_deg); //155 is equal to a 90 for some reason
+  chassis->waitUntilSettled();
+  //pathgen->setTarget("A");
+  //pathgen->waitUntilSettled();
+}
+void turn3 () {
+  chassis->turnAngle(214_deg); //155 is equal to a 90 for some reason
   chassis->waitUntilSettled();
   //pathgen->setTarget("A");
   //pathgen->waitUntilSettled();
