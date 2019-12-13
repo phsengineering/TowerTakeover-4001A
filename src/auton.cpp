@@ -15,6 +15,10 @@ void autonhandler() {
     case 6:
       auton6();
     case 7:
-      movingbeans();
+      driveVel(-100);
+      delay(1000);
+      driveVel(100);
+      delay(1000);
+      driveVel(0);
   }
 }

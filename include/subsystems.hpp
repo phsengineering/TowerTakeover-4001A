@@ -14,8 +14,8 @@ extern ADIEncoder rEncoder;
 extern ADIEncoder mEncoder;
 enum brake_modes {HOLD = 0, COAST = 1, BRAKE = 2};
 static int part = 0;
-static int auton = 7; //runs case 7
-static double chassisWidth = 5.0;
+static int auton = 1; //runs case 7
+static double chassisWidth = 2.5;
 static bool debug = false;
 static double lastEncoderValueL = 0;
 static double lastEncoderValueM = 0;
@@ -44,4 +44,11 @@ void blueFront();
 void blueBack();
 void auton5();
 void auton6();
-void movingbeans();
+void turn40();
+void turnBack();
+void turn3();
+void okapiAuton();
+void testFwd();
+void turnL90();
+void turnR90();
+void leftturnsgalore();
