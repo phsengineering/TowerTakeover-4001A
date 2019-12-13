@@ -33,7 +33,7 @@ auto chassis = ChassisControllerBuilder()
          { 0.0026, 0.0, 0.0000 }, // Turn controller gains
          { 0.0001, 0, 0.0000 }  // Angle controller gains (helps drive straight)
      )
-    .withMaxVoltage(10000)
+    .withMaxVoltage(12000) //normally 10000
     .withDerivativeFilters(
        std::make_unique<AverageFilter<3>>(),
        std::make_unique<AverageFilter<3>>(),
@@ -65,6 +65,19 @@ void turnBack () {
 }
 void turn3 () {
   chassis->turnAngle(214_deg); //155 is equal to a 90 for some reason
+  chassis->waitUntilSettled();
+  //pathgen->setTarget("A");
+  //pathgen->waitUntilSettled();
+}
+void turnL90 () {
+  chassis->turnAngle(-155_deg); //155 is equal to a 90 for some reason
+  chassis->waitUntilSettled();
+  //pathgen->setTarget("A");
+  //pathgen->waitUntilSettled();
+}
+
+void turnR90 () {
+  chassis->turnAngle(165_deg); //155 is equal to a 90 for some reason
   chassis->waitUntilSettled();
   //pathgen->setTarget("A");
   //pathgen->waitUntilSettled();

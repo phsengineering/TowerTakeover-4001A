@@ -17,7 +17,7 @@ void autonomous() {
   autonhandler();
 }
 void opcontrol() {
-  autonhandler();
+  //autonhandler();
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
@@ -86,7 +86,7 @@ void opcontrol() {
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L2) ) {
       int trayVel = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
-      if(tray.get_position() > 1610 &&  trayVel < 0) {
+      if(tray.get_position() > 1650 &&  trayVel > 0) {
         trayHandler(0);
       }
       else {

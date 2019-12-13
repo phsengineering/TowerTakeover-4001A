@@ -3,29 +3,27 @@ using namespace pros;
 void redBack() {
   clearDrive();
   pros::delay(200);
-  smartDrive(215, 2500.0);
+  smartDrive(300, 1600.0);
   intakeHandler(190);
   set_drive(HOLD);
   pros::delay(50);
   set_drive(COAST);
   clearDrive();
-  smartDrive(-280, -1390.0);
+  smartDrive(-280, -900.0);
   set_drive(HOLD);
   pros::delay(50);
   set_drive(COAST);
   clearDrive();
-  while(lEncoder.get_value() < 155) {
-    driveLF.move_velocity(50);
-    driveLB.move_velocity(50);
-    driveRF.move_velocity(-50);
-    driveRB.move_velocity(-50);
-  }
+  turnR90();
+  set_drive(HOLD);
+  pros::delay(10);
+  set_drive(COAST);
   driveVel(0);
   intakeHandler(0);
   clearDrive();
   set_drive(HOLD);
   pros::delay(50);
-  while(obtainPositionF() < 360) {
+  while(obtainPositionF() < 300) {
     driveRF.move_velocity(100);
     driveRB.move_velocity(100);
     driveLB.move_velocity(100);
@@ -33,26 +31,26 @@ void redBack() {
     pros::delay(15);
   }
   driveVel(0);
-  intakeHandler(-75);
+  // intakeHandler(-75);
   pros::delay(250);
   intakeHandler(0);
   tray.tare_position();
   int traySpeed = 140;
   while(tray.get_position() < 730) {
-    traySpeed-=5;
+    traySpeed-=3;
     tray.move(traySpeed);
     pros::delay(60);
     if(traySpeed < 40) {
       break;
     }
   }
-  driveVel(50);
-  pros::delay(400);
-  driveVel(0);
-  pros::delay(300);
-  driveVel(-100);
-  pros::delay(1000);
-  driveVel(0);
+  // driveVel(50);
+  // pros::delay(300);
+  // driveVel(0);
+  // pros::delay(300);
+  // driveVel(-100);
+  // pros::delay(1000);
+  // driveVel(0);
 }
 void redFront() {
   pros::delay(200);
@@ -134,4 +132,38 @@ void okapiAuton() {
   smartDrive(-300, -1200);
   turn3();
   intakeHandler(0);
+}
+void leftturnsgalore() {
+  intakeHandler(195);
+  clearDrive();
+  smartDrive(300, 3100.0);
+  // intakeHandler(195);
+   set_drive(HOLD);
+   clearDrive();
+   delay(100);
+   set_drive(COAST);
+   turnL90();
+   set_drive(HOLD);
+   clearDrive();
+   delay(100);
+   set_drive(COAST);
+  // smartDrive(300, 1500);
+  // intakeHandler(195);
+  // set_drive(HOLD);
+  // clearDrive();
+  // delay(100);
+  // set_drive(COAST);
+  // turnL90();
+  // set_drive(HOLD);
+  // clearDrive();
+  // delay(100);
+  // set_drive(COAST);
+  // smartDrive(300, 1000.0);
+  // intakeHandler(195);
+  // set_drive(HOLD);
+  // clearDrive();
+  // delay(100);
+  // set_drive(COAST);
+  // intakeHandler(0);
+
 }
