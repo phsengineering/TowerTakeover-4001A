@@ -78,8 +78,8 @@ void opcontrol() {
     }
 
     if (tray.get_position() < 200) {
-      set_brake(HOLD, intakeL);
-      set_brake(HOLD, intakeR);
+      set_brake(BRAKE, intakeL);
+      set_brake(BRAKE, intakeR);
     } else {
       set_brake(COAST, intakeL);
       set_brake(COAST, intakeR);
