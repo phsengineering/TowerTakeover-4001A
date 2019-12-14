@@ -16,7 +16,7 @@ auto chassis = ChassisControllerBuilder()
     //.withDimensions(scales)
     .withGains(
          { 0.004, 0, 0.0 }, // Distance controller gains
-         { 0.0028, 0.00001, 0.0000 }, // Turn controller gains
+         { 0.0029, 0.00001, 0.0000 }, // Turn controller gains
          { 0.00022, 0, 0.0000 }  // Angle controller gains (helps drive straight)
      )
     .withDerivativeFilters(
@@ -63,6 +63,10 @@ void redOkapi() {
   hello->setMaxVelocity(250);
   chassis->moveDistance(2210);
   chassis->waitUntilSettled();
+}
+void redOkapi2() {
+  auto hello = chassis->getModel();
+  hello->setMaxVelocity(250);
   chassis->moveDistance(-1470);
   chassis->waitUntilSettled();
   chassis->turnAngle(250_deg);
@@ -74,6 +78,10 @@ void blueOkapi() {
   chassis->setTurnsMirrored(true);
   chassis->moveDistance(2210);
   chassis->waitUntilSettled();
+}
+void blueOkapi2() {
+  auto hello = chassis->getModel();
+  hello->setMaxVelocity(250);
   chassis->moveDistance(-1470);
   chassis->waitUntilSettled();
   chassis->turnAngle(250_deg);
