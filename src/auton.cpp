@@ -6,16 +6,16 @@ void autonhandler() {
       redBack();
     case 2:
       blueBack();
-    case 3:
-      redFront();
-    case 4:
-      blueFront();
-    case 5:
-      auton5();
-    case 6:
-      auton6();
-    case 7:
-      testFwd();
+    // case 3:
+    //   //redFront();
+    // case 4:
+    //   //blueFront();
+    // case 5:
+    //   //auton5();
+    // case 6:
+    //   //auton6();
+    // case 7:
+      //okapitester();
       // driveVel(-100);
       // delay(1000);
       // driveVel(100);
