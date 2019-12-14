@@ -14,7 +14,7 @@ extern ADIEncoder rEncoder;
 extern ADIEncoder mEncoder;
 enum brake_modes {HOLD = 0, COAST = 1, BRAKE = 2};
 static int part = 0;
-static int auton = 3; //runs case 7
+static int auton = 1; //runs case 7
 static double chassisWidth = 2.5;
 static bool debug = false;
 static double lastEncoderValueL = 0;

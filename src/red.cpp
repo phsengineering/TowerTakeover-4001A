@@ -27,4 +27,5 @@ void redBack() {
   delay(2400);
   driveVel(0);
   tray.move_absolute(10, -200);
+  delay(5000);
 }
