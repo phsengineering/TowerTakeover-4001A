@@ -14,7 +14,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-  autonhandler();
+  redOkapi();
 }
 void opcontrol() {
   //autonhandler();
