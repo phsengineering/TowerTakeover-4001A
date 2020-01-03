@@ -52,7 +52,16 @@ void testFwd();
 void turnL90();
 void turnR90();
 void turnR180();
-void redOkapi();
 void blueOkapi();
 void blueOkapi2();
+void blueOkapi3();
+void blueOkapi4();
+void blueOkapi5();
+void redOkapi();
 void redOkapi2();
+void redOkapi3();
+void redOkapi4();
+void redOkapi5();
+void generatePath(std::initializer_list<okapi::PathfinderPoint> iwaypoints,
+const std::string& ipathId,
+const okapi::PathfinderPoint& ilimits);
