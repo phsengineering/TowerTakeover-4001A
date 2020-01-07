@@ -35,17 +35,12 @@ void set_drive(int mode);
 void clearDrive();
 double obtainPositionF();
 void smartDrive(int speed, double fPoint);
-void correct(int time, int speed, bool counter);
 void turnright(float turn);
 void positionTrack();
 void redFront();
 void redBack();
 void blueFront();
 void blueBack();
-void okapiAuton();
-void testFwd();
 void redOkapi();
-
-void generatePath(std::initializer_list<okapi::PathfinderPoint> iwaypoints,
-const std::string& ipathId,
-const okapi::PathfinderPoint& ilimits);
+void moveLift(int goalHeight);
+void asyncIntakeHandler();

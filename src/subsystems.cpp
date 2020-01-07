@@ -14,7 +14,6 @@ Motor lift(8, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES);
 ADIEncoder lEncoder(5, 6);
 ADIEncoder rEncoder(1, 2);
 ADIEncoder mEncoder(3, 4);
-
 void drive(int y, int r)
 {
     //Scale up y and r from 127 to 12000
@@ -88,7 +87,7 @@ void smartDrive(int speed, double fPoint) {
         printf("Obtain position: %d\n", obtainPositionF());
       }
       driveVel(updateSpeed);
-      pros::delay(75);
+      delay(75);
     }
     while(obtainPositionF() < fPoint) {
       if(debug) {
@@ -108,7 +107,7 @@ void smartDrive(int speed, double fPoint) {
       if(debug) {
         printf("Obtain position: %d\n", obtainPositionF());
       }
-      pros::delay(75);
+      delay(75);
     }
     part++;
     driveVel(0);
@@ -133,7 +132,7 @@ void smartDrive(int speed, double fPoint) {
       if(debug) {
         printf("Obtain position: %d\n", obtainPositionF());
       }
-      pros::delay(75);
+      delay(75);
     }
     while(obtainPositionF() > fPoint) {
       if(debug) {
@@ -149,7 +148,7 @@ void smartDrive(int speed, double fPoint) {
       if(debug) {
         printf("Obtain position: %d\n", obtainPositionF());
       }
-      pros::delay(75);
+      delay(75);
     }
     part++;
     driveVel(0);
@@ -164,14 +163,14 @@ void correct(int time, int speed, bool counter) {
     driveRB.move_velocity(speed);
     driveLF.move_velocity(-speed);
     driveLB.move_velocity(-speed);
-    pros::delay(time);
+    delay(time);
   }
   else {
     driveRF.move_velocity(speed);
     driveRB.move_velocity(speed);
     driveLF.move_velocity(-speed);
     driveLB.move_velocity(-speed);
-    pros::delay(time);
+    delay(time);
   }
   driveVel(0);
 }

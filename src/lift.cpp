@@ -1,39 +1,19 @@
 #include "subsystems.hpp"
 #include <sstream>
 #include <string>
-using namespace pros;
-void resetLift() {
-  tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  while(lift.get_position() > 0 || tray.get_position() > 0) {
-    lift.move_velocity(-70);
-    pros::delay(200);
-    tray.move_velocity(-100);
-    if(tray.get_position() < 2) {
-      tray.move_velocity(0);
-    }
-    if(lift.get_position() < 0) {
-      lift.move_velocity(0);
-    }
-    if(tray.get_position() < 2 && lift.get_position() < 0) {
-      break;
-    }
-    pros::delay(50);
-  }
+using namespace okapi;
+
+auto liftwack = okapi::Motor(8);
+auto asyncIntake = okapi::MotorGroup({20, 21});
+IntegratedEncoder sesnor = IntegratedEncoder(liftwack);
+auto liftControl = okapi::AsyncPosControllerBuilder().withMotor(liftwack).withGearset(AbstractMotor::gearset::red).withSensor(sesnor).withMaxVelocity(200).build();
+void moveLift(int goalHeight) {
+  //liftControl->setMaxVelocity(200);
+  set_brake(COAST, lift);
+  liftControl->setTarget(goalHeight);
 }
-void moveLift() {
-  tray.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  lift.set_brake_mode(E_MOTOR_BRAKE_COAST);
-  while(lift.get_position() < 205 || tray.get_position() < 200) {
-    lift.move_velocity(70);
-    pros::delay(100);
-    tray.move_velocity(175);
-    if(tray.get_position() > 205) {
-      tray.move_velocity(0);
-    }
-    if(lift.get_position() > 200) {
-      lift.move_velocity(0);
-    }
-    pros::delay(50);
+void asyncIntakeHandler() {
+  if(lift.get_position() < 200) {
+    asyncIntake.moveVelocity(-100);
   }
 }

@@ -1,9 +1,6 @@
 #include "okapi/api.hpp"
 using namespace okapi;
 
-auto rightodom = ADIEncoder('A', 'B', false);
-auto leftodom = ADIEncoder('E', 'F', false);
-auto midodom = ADIEncoder('C', 'D', false);
 ChassisScales scales = ChassisScales({3.25, 9.75}, (imev5BlueTPR*(5/3)));
 Logger logger = Logger(TimeUtilFactory::createDefault().getTimer(), // It needs a Timer
         "/ser/sout", Logger::LogLevel::debug);
@@ -33,8 +30,8 @@ auto chassisA = AsyncMotionProfileControllerBuilder()
 
 
 void redOkapi() {
-  auto hello = chassis->getModel();
-  hello->setMaxVelocity(275);
+  auto modelGot = chassis->getModel();
+  modelGot->setMaxVelocity(275);
   chassis->setState({0_in, 0_in, 0_deg});
   chassis->moveDistance(60_in);
   chassis->waitUntilSettled();

@@ -5,7 +5,8 @@
 # Executables
 *.bin
 *.elf
-
+# MacOS crap
+*.DS_Store
 # PROS
 bin/
 .vscode/
