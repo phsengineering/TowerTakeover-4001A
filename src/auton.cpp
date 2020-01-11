@@ -1,18 +1,10 @@
+#include "main.h"
 #include "subsystems.hpp"
-using namespace pros;
+using namespace okapi;
 void autonhandler() {
-  // switch(auton) {
-  //   case 1:
-      redBack();
-  //   case 2:
-  //     blueBack();
-  //   case 3:
-  //     driveVel(-200);
-  //     delay(1000);
-  //     driveVel(0);
-  //     delay(500);
-  //     driveVel(200);
-  //     delay(1000);
-  //     driveVel(0);
-  // }
+      chassis->getModel()->setMaxVelocity(250);
+      chassis->driveToPoint({3_ft, 3_ft});
+      std::cout << "Follow this command: " << (chassis->getState()).str();
+      chassis->driveToPoint({0_ft, 0_ft});
+      std::cout << "Follow this command: " << (chassis->getState()).str();
 }

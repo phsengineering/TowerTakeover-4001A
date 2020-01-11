@@ -17,11 +17,10 @@ void autonomous() {
   autonhandler();
 }
 void opcontrol() {
-  //autonhandler();
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
-  pros::Controller mainController = Controller(E_CONTROLLER_MASTER);
+  Controller mainController = Controller(E_CONTROLLER_MASTER);
   set_brake(COAST, lift);
   set_brake(COAST, tray);
   clearDrive();
@@ -33,11 +32,8 @@ void opcontrol() {
     if ((!(count % 50)) && lift.is_over_temp()) {
       mainController.rumble(". -");
     }
-    //Drive
     int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
     int r = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
-
-    //Make r half as sensitive if not going forward or backward
     if (std::abs(y) < 16) {
       r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4), r);
     }
@@ -65,8 +61,6 @@ void opcontrol() {
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-      // intakeR.move_absolute(-5, -200);
-      // intakeL.move_absolute(-05, -200);
       tray.move_absolute(800, 200);
       lift.move_absolute(325, 150);
     }
@@ -97,14 +91,13 @@ void opcontrol() {
       intakeL.move_velocity(-100);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
-      mEncoder.reset();
-      lEncoder.reset();
-      rEncoder.reset();
+      clearDrive();
     }
-    printf("Left encoder: %d\n", lEncoder.get_value());
-    printf("Right encoder: %d\n", rEncoder.get_value());
-    printf("Middle encoder: %d\n", mEncoder.get_value());
-
-    pros::delay(50);
+    if(debug) {
+      printf("Left encoder: %d\n", lEncoder.get_value());
+      printf("Right encoder: %d\n", rEncoder.get_value());
+      printf("Middle encoder: %d\n", mEncoder.get_value());
+    }
+    delay(50);
   }
 }
