@@ -4,9 +4,9 @@
 
 using namespace pros;
 void initialize() {
-  pros::lcd::initialize();
-  pros::lcd::set_text(1, "Hello World!");
-  pros::delay(200);
+  delay(200);
+  lcd::initialize();
+  lcd::set_text(1, "Hello World!");
 }
 
 void disabled() {}
