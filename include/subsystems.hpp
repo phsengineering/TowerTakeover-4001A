@@ -24,3 +24,7 @@ void set_drive(int mode);
 void clearDrive();
 void debug();
 void autonhandler();
+void asynctrayHandler();
+void asyncIntakeHandler();
+void asyncIntakeHandler2();
+void moveLift(int goalHeight);

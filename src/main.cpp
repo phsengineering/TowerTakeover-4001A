@@ -56,19 +56,20 @@ void opcontrol() {
     }
     set_brake(HOLD, lift);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-      tray.move_absolute(690, 200);
-      lift.move_absolute(200, 150);
+      moveLift(140);
+      asyncIntakeHandler();
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-      tray.move_absolute(800, 200);
-      lift.move_absolute(325, 150);
+      moveLift(200);
+      asyncIntakeHandler();
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
-      lift.move_absolute(0, -70);
-      delay(200);
-      tray.move_absolute(0, -200);
+      moveLift(-50);
+      asyncIntakeHandler2();
+      asynctrayHandler();
+      delay(50);
     }
 
     if (tray.get_position() < 200) {

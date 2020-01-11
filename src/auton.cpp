@@ -16,25 +16,16 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
         "/ser/sout", // Output to the PROS terminal
         Logger::LogLevel::debug // Show errors and warnings
     ))
+    .withMaxVelocity(300)
     .buildOdometry(); // build an odometry chassis
 auto profileController = AsyncMotionProfileControllerBuilder()
-          .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
-          .withOutput(chassis)
-          .withLogger(std::make_shared<Logger>(
-              TimeUtilFactory::createDefault().getTimer(), // It needs a Timer
-              "/ser/sout", // Output to the PROS terminal
-              Logger::LogLevel::debug // Show errors and warnings
-          ))
-          .buildMotionProfileController();
-
-
-
+    .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
+    .withOutput(chassis)
+    .buildMotionProfileController();
 void autonhandler() {
-  profileController->generatePath({
-    {0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-    {3_ft, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward
-    "A" // Profile name
-  );
-  profileController->setTarget("A");
-  profileController->waitUntilSettled();
+    chassis->driveToPoint({3_ft, 0_ft});
+    chassis->setState(OdomState{0_ft, 0_ft});
+    chassis->driveToPoint({-1_ft, 0_ft}, true);
+    chassis->setState(OdomState{0_ft, 0_ft});
+    chassis->driveToPoint({0_ft, -2_ft});
 }
