@@ -8,7 +8,7 @@ void initialize() {
   lcd::initialize();
   lcd::set_text(1, "Hello World!");
 }
-
+//hjhjjjhhjhhjjh
 void disabled() {}
 
 void competition_initialize() {}
