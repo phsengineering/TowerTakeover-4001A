@@ -14,7 +14,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-  autonhandler();
+  //autonhandler();
+  mptest();
 }
 void opcontrol() {
   int count = 0;
