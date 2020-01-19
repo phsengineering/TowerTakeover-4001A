@@ -24,15 +24,28 @@ auto profileController = AsyncMotionProfileControllerBuilder()
     .buildMotionProfileController();
 void autonhandler() {
     chassis->driveToPoint({3_ft, 0_ft});
-    chassis->waitUntilSettled();
-    chassis->driveToPoint({0_ft, 0_ft}, true);
-    chassis->waitUntilSettled();
+    chassis->setState(OdomState{0_ft, 0_ft});
+    chassis->driveToPoint({-1_ft, 0_ft}, true);
+    chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
-    chassis->waitUntilSettled();
-    chassis->driveToPoint({0_ft, 0_ft}, true);
-    chassis->waitUntilSettled();
 }
 void mptest() {
+  //ChassisScales scales = ChassisScales({3.25, 9.75}, (imev5BlueTPR*(3/5)));
+  Logger logger = Logger(TimeUtilFactory::createDefault().getTimer(), // It needs a Timer
+          "/ser/sout", Logger::LogLevel::debug);
+  TimeUtil test = TimeUtilFactory::createDefault();
+  auto chassis = ChassisControllerBuilder()
+      .withMotors({4, 3}, {2, 1})
+      .withDimensions(AbstractMotor::gearset::blue, {{3.25_in, 9.75_in}, imev5BlueTPR*(5/3)})
+      .withSensors({'E', 'F', false}, {'A', 'B', false}, {'C', 'D', false})
+      .withOdometry({{2.76_in, 5_in, 4.5_in, 2.76_in}, quadEncoderTPR})
+      .buildOdometry(); // build an odometry chassis
+
+
+      auto profileController = AsyncMotionProfileControllerBuilder()
+          .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
+          .withOutput(chassis)
+          .buildMotionProfileController();
 
       profileController->generatePath({
       {0_ft, 0_ft, 0_deg},
@@ -48,24 +61,14 @@ void mptest() {
       {0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
       {4_ft, 5.2_ft, 180_deg}}, // The next point in the profile, 3 feet forward
       "C" // Profile name
-    );
-    profileController->generatePath({
-    {0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-    {6_ft, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward
-    "D" // Profile name
-    );
-    profileController->generatePath({
-    {0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-    {3_ft, 0_ft, 90_deg}}, // The next point in the profile, 3 feet forward
-    "E"
-    );
+);
 //start autonomous here
       profileController->setTarget("A");
       profileController->waitUntilSettled();
       profileController->setTarget("B",true);
       profileController->setTarget("C",true);
       profileController->waitUntilSettled();
-      profileController->setTarget("D");
-      profileController->waitUntilSettled();
-      profileController->setTarget("E",true);
+      //profileController->setTarget("D");
+      //profileController->waitUntilSettled();
+      //profileController->setTarget("E",true);
 }
