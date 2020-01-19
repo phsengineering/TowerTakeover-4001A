@@ -9,8 +9,8 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
          { 0.00022, 0, 0.0000 }  // Angle controller gains (helps drive straight)
      )
     .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true})
-    .withDimensions(AbstractMotor::gearset::blue, {{3.25_in, 9.625_in}, imev5BlueTPR})
-    .withOdometry({{2.75_in, 5_in, 4.375_in, 2.75_in}, quadEncoderTPR}) // use the same scales as the chassis (above)
+    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.25_in, 4.375_in, 2.75_in}, quadEncoderTPR})
+    .withOdometry() // use the same scales as the chassis (above)
     .withLogger(std::make_shared<Logger>(
         TimeUtilFactory::createDefault().getTimer(), // It needs a Timer
         "/ser/sout", // Output to the PROS terminal
@@ -28,4 +28,7 @@ void autonhandler() {
     chassis->driveToPoint({-1_ft, 0_ft}, true);
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
+}
+void mptest() {
+    chassis->driveToPoint({2_ft, 2_ft});
 }

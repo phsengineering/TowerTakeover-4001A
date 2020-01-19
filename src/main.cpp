@@ -8,13 +8,14 @@ void initialize() {
   lcd::initialize();
   lcd::set_text(1, "Hello World!");
 }
-
+//hjhjjjhhjhhjjh
 void disabled() {}
 
 void competition_initialize() {}
 
 void autonomous() {
-  autonhandler();
+  //autonhandler();
+  mptest();
 }
 void opcontrol() {
   int count = 0;
