@@ -8,22 +8,21 @@ void initialize() {
   lcd::initialize();
   lcd::set_text(1, "Hello World!");
 }
-//hjhjjjhhjhhjjh
 void disabled() {}
 
 void competition_initialize() {}
 
 void autonomous() {
-  //autonhandler();
-  mptest();
+  autonhandler();
+  //mptest();
 }
 void opcontrol() {
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
   Controller mainController = Controller(E_CONTROLLER_MASTER);
-  set_brake(COAST, lift);
-  set_brake(COAST, tray);
+  set_brake(BRAKE, lift);
+  set_brake(BRAKE, tray);
   clearDrive();
   while (true) {
     if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
@@ -55,21 +54,23 @@ void opcontrol() {
     } else {
       intakeHandler(0);
     }
-    set_brake(HOLD, lift);
+    //set_brake(HOLD, lift);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-      moveLift(140);
-      asyncIntakeHandler();
+      moveLift(155);
+
+    }
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
+      tray.move_absolute(400,200);
+
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       moveLift(200);
-      asyncIntakeHandler();
     }
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
-      moveLift(-50);
-      asyncIntakeHandler2();
-      asynctrayHandler();
+      lift.move_absolute(-5,-100);
+      tray.move_absolute(0, -100);
       delay(50);
     }
 
