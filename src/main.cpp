@@ -3,14 +3,39 @@
 #include "subsystems.hpp"
 
 using namespace pros;
+void on_center_button() {
+	if(auton > 3) {
+		auton = 0;
+	}
+	else {
+		auton++;
+	}
+  if (auton == 0) {
+		pros::lcd::set_text(2, "RED protecc");
+	}
+	if (auton == 1) {
+		pros::lcd::set_text(2, "BLUE protecc");
+	}
+	else if (auton == 2) {
+		pros::lcd::set_text(2, "RED Back autonomous");
+	}
+	else if (auton == 3) {
+		pros::lcd::set_text(2, "BLUE Back autonomous");
+	}
+}
+
 void initialize() {
   delay(200);
-  lcd::initialize();
-  lcd::set_text(1, "Hello World!");
-}
-void disabled() {}
+	pros::lcd::initialize();
+	auton = 0;
 
-void competition_initialize() {}
+
+	pros::lcd::set_text(1, "4001A");
+
+	pros::lcd::set_text(5, "Auton Ready");
+	pros::lcd::register_btn1_cb(on_center_button);
+}
+
 
 void autonomous() {
   autonhandler();
@@ -56,8 +81,8 @@ void opcontrol() {
     }
     //set_brake(HOLD, lift);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-      moveLift(155);
-
+      moveLift(145);
+      intakeHandler(-180);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
       tray.move_absolute(400,200);
@@ -70,7 +95,7 @@ void opcontrol() {
 
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
       lift.move_absolute(-5,-100);
-      tray.move_absolute(0, -100);
+      tray.move_absolute(0, -200);
       delay(50);
     }
 
@@ -95,11 +120,6 @@ void opcontrol() {
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
       clearDrive();
-    }
-    if(debug) {
-      printf("Left encoder: %d\n", lEncoder.get_value());
-      printf("Right encoder: %d\n", rEncoder.get_value());
-      printf("Middle encoder: %d\n", mEncoder.get_value());
     }
     delay(50);
   }

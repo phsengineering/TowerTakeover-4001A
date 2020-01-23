@@ -22,7 +22,6 @@ auto profileController = AsyncMotionProfileControllerBuilder()
     .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
     .withOutput(chassis)
     .buildMotionProfileController();
-//auto liftControl = okapi::AsyncPosControllerBuilder().withMotor(liftwack).withGearset(AbstractMotor::gearset::red).withSensor(sesnor).withMaxVelocity(200).build();
 void odomtest() {
     chassis->driveToPoint({3_ft, 0_ft});
     chassis->setState(OdomState{0_ft, 0_ft});
@@ -36,12 +35,16 @@ void autonhandler() {
       protecc(false);
     case 1:
       protecc(true);
+    case 2:
+      notprotecc(false);
+    case 3:
+      notprotecc(true);
   }
 }
 void protecc(bool blue) {
     autonLift(210);
     set_brake(HOLD, lift);
-    pros::delay(400);
+    pros::delay(200);
     chassis->moveDistance(43.5_in);
     chassis->waitUntilSettled();
     if(blue) {
@@ -54,15 +57,16 @@ void protecc(bool blue) {
     set_brake(BRAKE, lift);
     lift.move_absolute(-5, -30);
     intakeHandler(200);
+    pros::delay(250);
     chassis->moveDistance(5.5_in);
-    pros::delay(1500);
+    pros::delay(750);
     intakeHandler(0);
     chassis->waitUntilSettled();
     if(blue) {
-      chassis->turnAngle(-172_deg);
+      chassis->turnAngle(-170_deg);
     }
     else {
-      chassis->turnAngle(172_deg);
+      chassis->turnAngle(170_deg);
     }
     chassis->waitUntilSettled();
     intakeHandler(200);
@@ -87,4 +91,51 @@ void protecc(bool blue) {
     driveVel(0);
     tray.move_absolute(10, -200);
     delay(5000);
+}
+void notprotecc(bool blue) {
+  set_brake(COAST, tray);
+  intakeHandler(180);
+  chassis->moveDistance(26_in);
+  chassis->setMaxVelocity(300);
+  if(blue) {
+    chassis->turnAngle(80_deg); //blue positive then negative
+  }
+  else {
+    chassis->turnAngle(-80_deg); //red negative then positive
+  }
+  intakeHandler(50);
+  chassis->moveDistance(-27_in);
+  if(blue) {
+    chassis->turnAngle(-80_deg);
+  }
+  else {
+    chassis->turnAngle(80_deg); //60 deg
+  }
+  intakeHandler(180);
+
+  chassis->moveDistance(30.5_in);
+  intakeHandler(60);
+  if(blue) {
+    chassis->turnAngle(-185_deg);
+  }
+  else {
+    chassis->turnAngle(185_deg);
+  }
+  intakeHandler(0);
+  driveVel(320);
+  delay(1300);
+  driveVel(0);
+  intakeHandler(-95);
+  delay(175);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(165);
+  }
+  driveVel(400);
+  delay(200);
+  driveVel(0);
+  delay(50);
+  driveVel(-300);
+  delay(1000);
+  driveVel(0);
 }
