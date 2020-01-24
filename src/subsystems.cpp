@@ -25,26 +25,26 @@ void drive(int y, int r)
     driveRF.move_voltage(y - r);
     driveRB.move_voltage(y - r);
 }
-void intakeHandler(int speed) {
+void intakeHandler(int speed) { //one method to run both intakes
     intakeR.move_velocity(speed);
     intakeL.move_velocity(speed);
 }
-void trayHandler(int trayPos) {
+void trayHandler(int trayPos) { //verify that tray cannot move past a certain point to avoid motor strain
   if(tray.get_position() < 25 && trayPos < 0) {
     trayPos = 0;
   }
-  tray.move_velocity(trayPos);
+  tray.move_velocity(trayPos); //otherwise move tray
 }
-void liftHandler(int liftInput) {
+void liftHandler(int liftInput) { //essentially redundant but it makes us look fancier so whatever
   lift.move_velocity(liftInput);
 }
-void driveVel(int updateSpeed) {
+void driveVel(int updateSpeed) { //raw speed control over chassis - used in auton for movements where odom/shaft encoders not helpful
   driveLF.move_velocity(updateSpeed);
   driveLB.move_velocity(updateSpeed);
   driveRB.move_velocity(updateSpeed);
   driveRF.move_velocity(updateSpeed);
 }
-void clearDrive() {
+void clearDrive() { //clear all distance tracking sensors
   driveLF.tare_position();
   driveLB.tare_position();
   driveRB.tare_position();
@@ -53,7 +53,7 @@ void clearDrive() {
   rEncoder.reset();
 }
 
-void set_brake(int mode, Motor motor) {
+void set_brake(int mode, Motor motor) { //set brake mode for individual motors without pros enum
   switch(mode) {
     case 0:
       motor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -64,41 +64,9 @@ void set_brake(int mode, Motor motor) {
   }
 }
 
-void set_drive(int mode) {
+void set_drive(int mode) { //switch the brake mode of the whole chassis at once
   Motor driveGroup [4] = { driveLB, driveLF, driveRF, driveRB };
   for(int i = 0; i < 4; i++) {
     set_brake(mode, driveGroup[i]);
   }
 }
-/*
-void positionTrack() {
-
-    // Can multiply these by a scalar to get the values in inches, or whatever unit you'd like your x and y coordinates to be in.
-    double dR = rEncoder.get_value() - lastEncoderValueR;
-    double dL = lEncoder.get_value() - lastEncoderValueL;
-    double dM = mEncoder.get_value() - lastEncoderValueM;
-
-    double dS = (dR + dL) / 2.0;  // Distance robot traveled since last checked.
-    double dTheta = (dM*556.0) / (chassisWidth);  // Change in angle robot turned since last checked. Where chassisWidth is the distance between your left and right tracking wheels.
-
-    double avgTheta = theta + dTheta / 2.0;  // Angle robot is assumed to have been facing when moving dS.
-
-    // Change in x and y position since last checked.
-    double dX = dS * cos(avgTheta) + dM * sin(avgTheta);
-    double dY = dS * sin(avgTheta) - dM * cos(avgTheta);
-
-    // Update current robot position.
-    x += dX;
-    y += dY;
-    theta += dTheta;
-    if (debug) {
-      printf("X Position: %f\n", x);
-      printf("Middle encoder: %d\n", mEncoder.get_value());
-      printf("Y Position: %f\n", y);
-      printf("Theta disp Position: %f\n", theta);
-    }
-    lastEncoderValueL = lEncoder.get_value();
-    lastEncoderValueR = rEncoder.get_value();
-    lastEncoderValueM = mEncoder.get_value();
-}
-*/

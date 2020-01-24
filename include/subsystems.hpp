@@ -14,7 +14,7 @@ extern Motor lift;
 extern ADIEncoder lEncoder;
 extern ADIEncoder rEncoder;
 extern ADIEncoder mEncoder;
-static int auton = 3;
+static int auton = 0;
 extern ADIDigitalIn autonchooser;
 enum brake_modes {HOLD = 0, COAST = 1, BRAKE = 2};
 void drive(int y, int r);
