@@ -3,43 +3,66 @@
 #include "subsystems.hpp"
 
 using namespace pros;
+void on_center_button() {
+	if(auton > 3) {
+		auton = 0;
+	}
+	else {
+		auton++;
+	}
+  if (auton == 0) {
+		pros::lcd::set_text(2, "RED protecc");
+	}
+	if (auton == 1) {
+		pros::lcd::set_text(2, "BLUE protecc");
+	}
+	else if (auton == 2) {
+		pros::lcd::set_text(2, "RED Back autonomous");
+	}
+	else if (auton == 3) {
+		pros::lcd::set_text(2, "BLUE Back autonomous");
+	}
+}
+
 void initialize() {
   delay(200);
-  lcd::initialize();
-  lcd::set_text(1, "Hello World!");
-}
-//hjhjjjhhjhhjjh
-void disabled() {}
+	pros::lcd::initialize();
+	auton = 0;
 
-void competition_initialize() {}
+
+	pros::lcd::set_text(1, "4001A");
+
+	pros::lcd::set_text(5, "Auton Ready");
+	pros::lcd::register_btn1_cb(on_center_button);
+}
+
 
 void autonomous() {
-  //autonhandler();
-  mptest();
+  autonhandler();
 }
 void opcontrol() {
   int count = 0;
   int intakeCount = 0;
   int traySpeed;
   Controller mainController = Controller(E_CONTROLLER_MASTER);
-  set_brake(COAST, lift);
-  set_brake(COAST, tray);
+  set_brake(BRAKE, lift); //make sure we're not stressing out the lift/tray unnecessarily
+  set_brake(BRAKE, tray);
   clearDrive();
   while (true) {
-    if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
+    if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) { //debug function
       clearDrive();
     }
     count++;
-    if ((!(count % 50)) && lift.is_over_temp()) {
+    if ((!(count % 50)) && lift.is_over_temp()) { //vibrate if the lift is running over 50C
       mainController.rumble(". -");
     }
-    int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
+    int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y); //capture joystick values
     int r = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
-    if (std::abs(y) < 16) {
+    if (std::abs(y) < 16) { //feed through to motors with deadband/scales
       r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4), r);
     }
     drive(y, r);
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) {
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) { //basic intake control
       intakeHandler(200);
     } else if (mainController.get_digital(E_CONTROLLER_DIGITAL_R2)) {
       intakeHandler(-100);
@@ -55,32 +78,29 @@ void opcontrol() {
     } else {
       intakeHandler(0);
     }
-    set_brake(HOLD, lift);
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) {
-      moveLift(140);
-      asyncIntakeHandler();
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_X)) { //async lift control
+      moveLift(145); //with async motion profiler
+      intakeHandler(-180);
     }
-
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
+      tray.move_absolute(400,200); //no profiler used here, allows for more specific velocity control
+    }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       moveLift(200);
-      asyncIntakeHandler();
     }
-
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) {
-      moveLift(-50);
-      asyncIntakeHandler2();
-      asynctrayHandler();
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) { //reset tray and lfit
+      lift.move_absolute(-5,-100);
+      tray.move_absolute(0, -200);
       delay(50);
     }
-
-    if (tray.get_position() < 200) {
+    if (tray.get_position() < 200) { //keep tray on brake if under 200 ticks, otherwise release
       set_brake(BRAKE, intakeL);
       set_brake(BRAKE, intakeR);
     } else {
       set_brake(COAST, intakeL);
       set_brake(COAST, intakeR);
     }
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L2) ) {
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_L2) ) { //tray macro (unused)
       int trayVel = mainController.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
       if(tray.get_position() > 1650 &&  trayVel > 0) {
         trayHandler(0);
@@ -89,17 +109,9 @@ void opcontrol() {
         trayHandler(trayVel);
       }
     }
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_B)) {
+    if (mainController.get_digital(E_CONTROLLER_DIGITAL_B)) { //emergency method to remove stray cube
       intakeL.move_velocity(-100);
     }
-    if (mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) {
-      clearDrive();
-    }
-    if(debug) {
-      printf("Left encoder: %d\n", lEncoder.get_value());
-      printf("Right encoder: %d\n", rEncoder.get_value());
-      printf("Middle encoder: %d\n", mEncoder.get_value());
-    }
-    delay(50);
+    delay(50); //let's not update too quickly
   }
 }

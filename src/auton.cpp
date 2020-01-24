@@ -2,33 +2,139 @@
 #include "subsystems.hpp"
 using namespace okapi;
 std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
-    .withMotors({4, 3}, {2, 1}) // left motor is 1, right motor is 2 (reversed)
+    .withMotors({4, 3}, {2, 1}) // pass motors to odomchassiscontroller builder
     .withGains(
-         { 0.001, 0, 0.0 }, // Distance controller gains
-         { 0.0029, 0.0, 0.000 }, // Turn controller gains
-         { 0.00022, 0, 0.0000 }  // Angle controller gains (helps drive straight)
+         { 0.0011, 0, 0.0 }, // Distance controller gains
+         { 0.00315, 0.00, 0.00 }, // Turn controller gains
+         { 0.00022, 0, 0.0000 }  // Angle controller gains
      )
-    .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true})
-    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.25_in, 4.375_in, 2.75_in}, quadEncoderTPR})
+    .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
+    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.25_in, 4.375_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
     .withOdometry() // use the same scales as the chassis (above)
     .withLogger(std::make_shared<Logger>(
-        TimeUtilFactory::createDefault().getTimer(), // It needs a Timer
+        TimeUtilFactory::createDefault().getTimer(),
         "/ser/sout", // Output to the PROS terminal
-        Logger::LogLevel::debug // Show errors and warnings
+        Logger::LogLevel::debug // Show all feedback
     ))
-    .withMaxVelocity(300)
+    .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
     .buildOdometry(); // build an odometry chassis
-auto profileController = AsyncMotionProfileControllerBuilder()
+auto profileController = AsyncMotionProfileControllerBuilder() //currently unused because open loop
     .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
     .withOutput(chassis)
     .buildMotionProfileController();
-void autonhandler() {
+void odomtest() { //unused due to issues with turns/scales
     chassis->driveToPoint({3_ft, 0_ft});
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({-1_ft, 0_ft}, true);
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
 }
-void mptest() {
-    chassis->driveToPoint({2_ft, 2_ft});
+void autonhandler() { //check global integer auton
+  switch(auton) {
+    case 0:
+      protecc(false); //red protected zone (5)
+    case 1:
+      protecc(true); //blue protected zone (5)
+    case 2:
+      notprotecc(false); //red unprotected (6-7)
+    case 3:
+      notprotecc(true); //blue unprotected (6-7)
+  }
+}
+void protecc(bool blue) {
+    autonLift(210); //move lift up and out of the way
+    set_brake(HOLD, lift); //keep lift locked through first movement
+    pros::delay(200);
+    chassis->moveDistance(43.5_in);
+    chassis->waitUntilSettled();
+    if(blue) {
+      chassis->turnAngle(-120_deg); //turn to face the four stack
+    }
+    else {
+      chassis->turnAngle(120_deg);
+    }
+    chassis->waitUntilSettled();
+    set_brake(BRAKE, lift); //unlock lift
+    lift.move_absolute(-5, -30); //move lift down to pull cubes in
+    intakeHandler(200); //pull cubes in
+    pros::delay(250); //keep pulling them in for 250 ms
+    chassis->moveDistance(5.5_in); //move forward to collect every cube available
+    pros::delay(750);
+    intakeHandler(0);
+    chassis->waitUntilSettled();
+    if(blue) {
+      chassis->turnAngle(-170_deg); //turn back to face protected zone
+    }
+    else {
+      chassis->turnAngle(170_deg);
+    }
+    chassis->waitUntilSettled();
+    intakeHandler(200); //run intakes to get the last cube on the way to the zone
+    chassis->setMaxVelocity(500); //release speed cap
+    chassis->moveDistance(34_in); //move to zone
+    chassis->waitUntilSettled();
+    pros::delay(100);
+    intakeHandler(0);
+    driveVel(100);
+    pros::delay(300);
+    driveVel(0);
+    intakeHandler(-95); //pull cubes down a bit
+    delay(300);
+    intakeHandler(0);
+    while(tray.get_position() < 1600) { //deploy 5 stack
+      tray.move_velocity(190);
+    }
+    tray.move_velocity(0);
+    delay(100);
+    driveVel(-250); //pull back from stack on time
+    delay(1000);
+    driveVel(0);
+    tray.move_absolute(10, -200);
+    delay(5000); //prevent further instructions from running
+}
+void notprotecc(bool blue) {
+  set_brake(COAST, tray); //make tray coast to cut down on motor strain
+  intakeHandler(180); //run intakes
+  chassis->moveDistance(26_in); //pull the first two cubes in
+  if(blue) {
+    chassis->turnAngle(80_deg); //blue positive then negative
+  }
+  else {
+    chassis->turnAngle(-80_deg); //red negative then positive
+  }
+  intakeHandler(50); //lower intake speed while moving to second line up
+  chassis->moveDistance(-27_in); //move to second line up
+  if(blue) { //cancel out initial turn
+    chassis->turnAngle(-80_deg);
+  }
+  else {
+    chassis->turnAngle(80_deg); //60 deg
+  }
+  intakeHandler(180); //run intakes back to full for second line up
+
+  chassis->moveDistance(30.5_in); //collect the next 4 cubes
+  intakeHandler(60); //lower speed to reduce motor strain after run through
+  if(blue) {
+    chassis->turnAngle(-185_deg); //turn back to the unprotectedzone
+  }
+  else {
+    chassis->turnAngle(185_deg);
+  }
+  intakeHandler(0);
+  driveVel(320); //deploy on time
+  delay(1300);
+  driveVel(0);
+  intakeHandler(-95);
+  delay(175);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(165);
+  }
+  driveVel(400);
+  delay(200);
+  driveVel(0);
+  delay(50);
+  driveVel(-300);
+  delay(1000);
+  driveVel(0);
 }
