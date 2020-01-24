@@ -30,16 +30,17 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->driveToPoint({0_ft, -2_ft});
 }
 void autonhandler() { //check global integer auton
-  switch(auton) {
-    case 0:
-      protecc(false); //red protected zone (5)
-    case 1:
-      protecc(true); //blue protected zone (5)
-    case 2:
-      notprotecc(false); //red unprotected (6-7)
-    case 3:
-      notprotecc(true); //blue unprotected (6-7)
-  }
+  // switch(auton) {
+  //   case 0:
+  //     protecc(false); //red protected zone (5)
+  //   case 1:
+  //     protecc(true); //blue protected zone (5)
+  //   case 2:
+       notprotecc(false); //red unprotected (6-7)
+  //   case 3:
+  //     notprotecc(true); //blue unprotected (6-7)
+  // }
+  //protecc(true);
 }
 void protecc(bool blue) {
     autonLift(210); //move lift up and out of the way
@@ -63,10 +64,10 @@ void protecc(bool blue) {
     intakeHandler(0);
     chassis->waitUntilSettled();
     if(blue) {
-      chassis->turnAngle(-170_deg); //turn back to face protected zone
+      chassis->turnAngle(-160_deg); //turn back to face protected zone
     }
     else {
-      chassis->turnAngle(170_deg);
+      chassis->turnAngle(160_deg);
     }
     chassis->waitUntilSettled();
     intakeHandler(200); //run intakes to get the last cube on the way to the zone
