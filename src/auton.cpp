@@ -145,18 +145,19 @@ void notprotecc(bool blue) {
 void back5(bool blue) {
   intakeHandler(195);
   chassis->setMaxVelocity(250);
-  chassis->moveRaw(2210); //will not compile anymore. must be changed to either moveRaw (if using ticks) or have argument converted to literal (number_in)
-  chassis->waitUntilSettled(); //redundant because this is called within moveDistance itself
-  intakeHandler(0);
-  chassis->moveRaw(-1470);
+  chassis->moveDistance(36_in); //will not compile anymore. must be changed to either moveRaw (if using ticks) or have argument converted to literal (number_in)
+  pros::delay(500);
+  //intakeHandler(0);
+  intakeHander(45)
+  chassis->moveDistance(-18_in);
   chassis->waitUntilSettled();
   if(blue) {
-    chassis->turnAngle(-250_deg);
+    chassis->turnAngle(-140_deg);
   }
   else {
-    chassis->turnAngle(250_deg); //needs to be tweaked since scales are off
+    chassis->turnAngle(140_deg); //needs to be tweaked since scales are off
   }
-  chassis->stop();
+  intakeHandler(0);
   driveVel(0);
   delay(50);
   driveVel(200);
