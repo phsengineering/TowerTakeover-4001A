@@ -3,6 +3,7 @@
 #include "subsystems.hpp"
 
 using namespace pros;
+int auton = 0;
 void on_center_button() {
 	if(auton > 3) {
 		auton = 0;
@@ -27,18 +28,15 @@ void on_center_button() {
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	auton = 0;
-
-
 	pros::lcd::set_text(1, "4001A");
-
+	pros::lcd::set_text(2, "RED protecc");
 	pros::lcd::set_text(5, "Auton Ready");
 	pros::lcd::register_btn1_cb(on_center_button);
 }
 
 
 void autonomous() {
-  autonhandler();
+  autonhandler(auton);
 }
 void opcontrol() {
   int count = 0;

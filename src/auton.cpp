@@ -30,17 +30,16 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->driveToPoint({0_ft, -2_ft});
 }
 void autonhandler() { //check global integer auton
-  // switch(auton) {
-  //   case 0:
-  //     protecc(false); //red protected zone (5)
-  //   case 1:
-  //     protecc(true); //blue protected zone (5)
-  //   case 2:
+   switch(auton) {
+     case 0:
+       protecc(false); //red protected zone (5)
+     case 1:
+       protecc(true); //blue protected zone (5)
+     case 2:
        notprotecc(false); //red unprotected (6-7)
-  //   case 3:
-  //     notprotecc(true); //blue unprotected (6-7)
-  // }
-  //protecc(true);
+     case 3:
+       notprotecc(true); //blue unprotected (6-7)
+   }
 }
 void protecc(bool blue) {
     autonLift(210); //move lift up and out of the way
