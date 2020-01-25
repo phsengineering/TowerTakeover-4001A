@@ -5,7 +5,7 @@
 using namespace pros;
 int auton = 0;
 void on_center_button() {
-	if(auton > 3) {
+	if(auton > 5) {
 		auton = 0;
 	}
 	else {
@@ -22,6 +22,12 @@ void on_center_button() {
 	}
 	else if (auton == 3) {
 		pros::lcd::set_text(2, "BLUE Back autonomous");
+	}
+	else if (auton == 4) {
+		pros::lcd::set_text(2, "Red back 5 autonomous");
+	}
+	else if (auton == 3) {
+		pros::lcd::set_text(2, "Blue back 5 autonomous");
 	}
 }
 

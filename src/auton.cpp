@@ -29,7 +29,7 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
 }
-void autonhandler() { //check global integer auton
+void autonhandler(int auton) { //check global integer auton
    switch(auton) {
      case 0:
        protecc(false); //red protected zone (5)
@@ -39,6 +39,10 @@ void autonhandler() { //check global integer auton
        notprotecc(false); //red unprotected (6-7)
      case 3:
        notprotecc(true); //blue unprotected (6-7)
+      case 4:
+        back5(false);
+      case 5:
+        back5(true);
    }
 }
 void protecc(bool blue) {
@@ -137,4 +141,43 @@ void notprotecc(bool blue) {
   driveVel(-300);
   delay(1000);
   driveVel(0);
+}
+void back5(bool blue) {
+  intakeHandler(195);
+  chassis->setMaxVelocity(250);
+  chassis->moveRaw(2210); //will not compile anymore. must be changed to either moveRaw (if using ticks) or have argument converted to literal (number_in)
+  chassis->waitUntilSettled(); //redundant because this is called within moveDistance itself
+  intakeHandler(0);
+  chassis->moveRaw(-1470);
+  chassis->waitUntilSettled();
+  if(blue) {
+    chassis->turnAngle(-250_deg);
+  }
+  else {
+    chassis->turnAngle(250_deg); //needs to be tweaked since scales are off
+  }
+  chassis->stop();
+  driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(-95);
+  delay(300);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
+  driveVel(-60);
+  delay(2400);
+  driveVel(0);
+  tray.move_absolute(10, -200);
+  delay(5000);
 }
