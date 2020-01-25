@@ -185,11 +185,11 @@ void blueback5() {
   intakeHandler(195);
   chassis->setMaxVelocity(250);
   chassis->moveDistance(38_in);
-  pros::delay(500);
+  pros::delay(100);
   intakeHandler(0);
   chassis->moveDistance(-21_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(-155_deg); //blue
+  chassis->turnAngle(-155_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -209,7 +209,7 @@ void blueback5() {
   driveVel(0);
   intakeHandler(0);
   delay(500);
-  driveVel(-60);
+  driveVel(-100);
   delay(2400);
   driveVel(0);
   tray.move_absolute(10, -200);

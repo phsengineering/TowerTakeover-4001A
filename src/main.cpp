@@ -26,7 +26,7 @@ void on_center_button() {
 	else if (auton == 4) {
 		pros::lcd::set_text(2, "Red back 5 autonomous");
 	}
-	else if (auton == 3) {
+	else if (auton == 5) {
 		pros::lcd::set_text(2, "Blue back 5 autonomous");
 	}
 }
