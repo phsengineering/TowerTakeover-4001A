@@ -29,17 +29,23 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
 }
-void autonhandler() { //check global integer auton
-  switch(auton) {
-    case 0:
-      protecc(false); //red protected zone (5)
-    case 1:
-      protecc(true); //blue protected zone (5)
-    case 2:
-      notprotecc(false); //red unprotected (6-7)
-    case 3:
-      notprotecc(true); //blue unprotected (6-7)
-  }
+void autonhandler(int auton) { //check global integer auton
+   switch(auton) {
+     case 0:
+       protecc(false); //red protected zone (5)
+     case 1:
+       protecc(true); //blue protected zone (5)
+     case 2:
+       notprotecc(false); //red unprotected (6-7)
+     case 3:
+       notprotecc(true); //blue unprotected (6-7)
+      case 4:
+        back5(false);
+      case 5:
+        blueback5();
+      case 6:
+        prog();
+   }
 }
 void protecc(bool blue) {
     autonLift(210); //move lift up and out of the way
@@ -63,10 +69,10 @@ void protecc(bool blue) {
     intakeHandler(0);
     chassis->waitUntilSettled();
     if(blue) {
-      chassis->turnAngle(-170_deg); //turn back to face protected zone
+      chassis->turnAngle(-160_deg); //turn back to face protected zone
     }
     else {
-      chassis->turnAngle(170_deg);
+      chassis->turnAngle(160_deg);
     }
     chassis->waitUntilSettled();
     intakeHandler(200); //run intakes to get the last cube on the way to the zone
@@ -113,12 +119,12 @@ void notprotecc(bool blue) {
   intakeHandler(180); //run intakes back to full for second line up
 
   chassis->moveDistance(30.5_in); //collect the next 4 cubes
-  intakeHandler(60); //lower speed to reduce motor strain after run through
+  intakeHandler(0); //lower speed to reduce motor strain after run through
   if(blue) {
-    chassis->turnAngle(-185_deg); //turn back to the unprotectedzone
+    chassis->turnAngle(-190_deg); //turn back to the unprotectedzone
   }
   else {
-    chassis->turnAngle(185_deg);
+    chassis->turnAngle(190_deg);
   }
   intakeHandler(0);
   driveVel(320); //deploy on time
@@ -127,14 +133,132 @@ void notprotecc(bool blue) {
   intakeHandler(-95);
   delay(175);
   intakeHandler(0);
-  while(tray.get_position() < 1600) {
-    tray.move_velocity(165);
-  }
-  driveVel(400);
+  tray.move_absolute(1600, 165);
+  delay(1500);
+  intakeHandler(0);
+  driveVel(125);
   delay(200);
   driveVel(0);
-  delay(50);
+  delay(250);
   driveVel(-300);
   delay(1000);
   driveVel(0);
+  chassis->stop();
+  intakeHandler(0);
+  tray.move_velocity(0);
+
+  delay(5000);
+}
+void back5(bool blue) {
+  intakeHandler(195);
+  chassis->setMaxVelocity(250);
+  chassis->moveDistance(39_in);
+  pros::delay(100);
+  intakeHandler(0);
+  chassis->moveDistance(-22_in);
+  chassis->waitUntilSettled();
+  chassis->turnAngle(155_deg); //red
+  intakeHandler(0);
+  driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(-110);
+  delay(300);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
+
+  driveVel(-100);
+  delay(2400);
+  driveVel(0);
+  tray.move_absolute(10, -200);
+  delay(5000);
+}
+void blueback5() {
+  intakeHandler(195);
+  chassis->setMaxVelocity(250);
+  chassis->moveDistance(38_in);
+  pros::delay(100);
+  intakeHandler(0);
+  chassis->moveDistance(-21_in);
+  chassis->waitUntilSettled();
+  chassis->turnAngle(-155_deg); //red
+  intakeHandler(0);
+  driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(-110);
+  delay(300);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
+  driveVel(-100);
+  delay(2400);
+  driveVel(0);
+  tray.move_absolute(10, -200);
+  delay(5000);
+}
+void prog() {
+  intakeHandler(195);
+  chassis->setMaxVelocity(250);
+  chassis->moveDistance(39_in);
+  pros::delay(100);
+  intakeHandler(0);
+  chassis->moveDistance(-22_in);
+  chassis->waitUntilSettled();
+  chassis->turnAngle(155_deg); //red
+  intakeHandler(0);
+  driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(-110);
+  delay(300);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
+  tray.move_absolute(10, -200);
+  chassis->moveDistance(-14_in);
+  chassis->turnAngle(162_deg);
+  intakeHandler(195);
+  chassis->moveDistance(2.6_ft);
+  intakeHandler(-80);
+  pros::delay(650);
+  intakeHandler(0);
+  chassis->moveDistance(-9_in);
+  lift.move_absolute(205, 100);
+  chassis->moveDistance(6_in);
+  intakeHandler(-100);
+  delay(1000);
+  intakeHandler(0);
+  chassis->stop();
 }
