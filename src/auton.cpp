@@ -55,57 +55,55 @@ void autonhandler(int auton) { //check global integer auton
    }
 }
 void protecc(bool blue) {
+  intakeHandler(200);
+  chassis->setMaxVelocity(300);
+  chassis->moveDistance(19_in);
+  chassis->setMaxVelocity(250);
+  delay(75);
+  if(blue) {
+    chassis->turnAngle(-90_deg);
+  }
+  else {
+    chassis->turnAngle(90_deg);
+  }
+  chassis->setMaxVelocity(300);
+  chassis->moveDistance(32.5_in);
+  delay(300);
+  intakeHandler(15);
+  chassis->moveDistance(-31_in);
+  chassis->setMaxVelocity(240);
+  delay(75);
+  if(blue) {
+    chassis->turnAngle(-135_deg);
+  }
+  else {
+    chassis->turnAngle(135_deg);
+  }
+  driveVel(150);
+  delay(600);
+  driveVel(0);
+  intakeHandler(-110);
+  delay(380);
+  intakeHandler(0);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(200);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
 
-    autonLift(210); //move lift up and out of the way
-    set_brake(HOLD, lift); //keep lift locked through first movement
-    pros::delay(200);
-    chassis->moveDistance(43.5_in);
-    chassis->stop();
-    chassis->waitUntilSettled();
-    if(blue) {
-      chassis->turnAngle(-90_deg); //turn to face the four stack
-    }
-    else {
-      chassis->turnAngle(90_deg);
-    }
-    chassis->waitUntilSettled();
-    set_brake(BRAKE, lift); //unlock lift
-    lift.move_absolute(-5, -30); //move lift down to pull cubes in
-    intakeHandler(200); //pull cubes in
-    pros::delay(265); //keep pulling them in for 250 ms
-    chassis->moveDistance(5.5_in); //move forward to collect every cube available
-    pros::delay(750);
-    intakeHandler(0);
-    chassis->waitUntilSettled();
-    if(blue) {
-      chassis->turnAngle(-130_deg); //turn back to face protected zone
-    }
-    else {
-      chassis->turnAngle(130_deg);
-    }
-    chassis->waitUntilSettled();
-    intakeHandler(200); //run intakes to get the last cube on the way to the zone
-    chassis->setMaxVelocity(500); //release speed cap
-    chassis->moveDistance(34_in); //move to zone
-    chassis->waitUntilSettled();
-    pros::delay(100);
-    intakeHandler(0);
-    driveVel(100);
-    pros::delay(300);
-    driveVel(0);
-    intakeHandler(-110); //pull cubes down a bit
-    delay(350);
-    intakeHandler(0);
-    while(tray.get_position() < 1600) { //deploy 5 stack
-      tray.move_velocity(190);
-    }
-    tray.move_velocity(0);
-    delay(100);
-    driveVel(-250); //pull back from stack on time
-    delay(1000);
-    driveVel(0);
-    tray.move_absolute(10, -200);
-    delay(5000); //prevent further instructions from running
+  driveVel(-120);
+  tray.move_absolute(0, -200);
+  delay(2400);
+  driveVel(0);
+  delay(5000);
+
+
+
+  delay(9914);
 }
 void notprotecc(bool blue) {
   set_brake(COAST, tray); //make tray coast to cut down on motor strain
