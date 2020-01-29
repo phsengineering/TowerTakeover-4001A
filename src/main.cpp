@@ -67,7 +67,7 @@ void opcontrol() {
     int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y); //capture joystick values
     int r = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
     if (std::abs(y) < 16) { //feed through to motors with deadband/scales
-      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4), r);
+      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.35), r);
     }
     drive(y, r);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) { //basic intake control
@@ -98,7 +98,7 @@ void opcontrol() {
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) { //reset tray and lfit
       lift.move_absolute(-5,-100);
-      tray.move_absolute(0, -200);
+      tray.move_absolute(-10, -200);
       delay(50);
     }
     if (tray.get_position() < 200) { //keep tray on brake if under 200 ticks, otherwise release
