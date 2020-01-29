@@ -4,12 +4,13 @@ using namespace okapi;
 std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
     .withMotors({4, 3}, {2, 1}) // pass motors to odomchassiscontroller builder
     .withGains(
-         { 0.0011, 0, 0.0 }, // Distance controller gains
-         { 0.00315, 0.00, 0.00 }, // Turn controller gains
+         { 0.00345, 0, 0.00009 }, // Distance controller gains
+         { 0.0061, 0.0005, 0.0002175 }, // Turn controller gains
          { 0.00022, 0, 0.0000 }  // Angle controller gains
      )
+
     .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
-    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.25_in, 4.375_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
+    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.8_in, 4.3125_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
     .withOdometry() // use the same scales as the chassis (above)
     .withLogger(std::make_shared<Logger>(
         TimeUtilFactory::createDefault().getTimer(),
@@ -29,6 +30,11 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->setState(OdomState{0_ft, 0_ft});
     chassis->driveToPoint({0_ft, -2_ft});
 }
+
+void pidtest(){
+    chassis->turnAngle(90_deg);
+}
+
 void autonhandler(int auton) { //check global integer auton
    switch(auton) {
      case 0:
@@ -48,10 +54,12 @@ void autonhandler(int auton) { //check global integer auton
    }
 }
 void protecc(bool blue) {
+
     autonLift(210); //move lift up and out of the way
     set_brake(HOLD, lift); //keep lift locked through first movement
     pros::delay(200);
     chassis->moveDistance(43.5_in);
+    chassis->stop();
     chassis->waitUntilSettled();
     if(blue) {
       chassis->turnAngle(-120_deg); //turn to face the four stack

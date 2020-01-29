@@ -45,7 +45,8 @@ void initialize() {
 
 
 void autonomous() {
-  autonhandler(auton);
+	pidtest();
+	//autonhandler(auton);
 }
 void opcontrol() {
   int count = 0;

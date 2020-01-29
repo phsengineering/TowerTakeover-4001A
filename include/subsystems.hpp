@@ -36,3 +36,4 @@ void notprotecc(bool blue);
 void back5(bool blue);
 void blueback5();
 void prog();
+void pidtest();
