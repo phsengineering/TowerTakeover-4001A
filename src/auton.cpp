@@ -72,7 +72,7 @@ void protecc(bool blue) {
     set_brake(BRAKE, lift); //unlock lift
     lift.move_absolute(-5, -30); //move lift down to pull cubes in
     intakeHandler(200); //pull cubes in
-    pros::delay(250); //keep pulling them in for 250 ms
+    pros::delay(265); //keep pulling them in for 250 ms
     chassis->moveDistance(5.5_in); //move forward to collect every cube available
     pros::delay(750);
     intakeHandler(0);
@@ -110,15 +110,19 @@ void protecc(bool blue) {
 void notprotecc(bool blue) {
   set_brake(COAST, tray); //make tray coast to cut down on motor strain
   intakeHandler(180); //run intakes
-  chassis->moveDistance(26_in); //pull the first two cubes in
+  chassis->setMaxVelocity(275);
+  chassis->moveDistance(27_in); //pull the first two cubes in
   if(blue) {
     chassis->turnAngle(50_deg); //blue positive then negative
   }
   else {
     chassis->turnAngle(-50_deg); //red negative then positive
   }
-  intakeHandler(50); //lower intake speed while moving to second line up
-  chassis->moveDistance(-27_in); //move to second line up
+  intakeHandler(30); //lower intake speed while moving to second line up
+  chassis->setMaxVelocity(400);
+  chassis->moveDistance(-28.5_in); //move to second line up
+  chassis->setMaxVelocity(250);
+  delay(150);
   if(blue) { //cancel out initial turn
     chassis->turnAngle(-50_deg);
   }
@@ -126,37 +130,40 @@ void notprotecc(bool blue) {
     chassis->turnAngle(50_deg); //60 deg
   }
   intakeHandler(180); //run intakes back to full for second line up
-
-  chassis->moveDistance(30.5_in); //collect the next 4 cubes
+  chassis->setMaxVelocity(190);
+  chassis->moveDistance(35.5_in); //collect the next 4 cubes
   intakeHandler(0); //lower speed to reduce motor strain after run through
-  if(blue) {
-    chassis->turnAngle(-160_deg); //turn back to the unprotectedzone
-  }
-  else {
-    chassis->turnAngle(160_deg);
-  }
+  chassis->setMaxVelocity(400);
+  chassis->moveDistance(-27.5_in);
+  chassis->waitUntilSettled();
+  delay(150);
+  chassis->turnAngle(125_deg); //red
   intakeHandler(0);
-  driveVel(320); //deploy on time
-  delay(1300);
   driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
   intakeHandler(-110);
-  delay(350);
+  delay(200);
   intakeHandler(0);
-  tray.move_absolute(1600, 165);
-  delay(1500);
-  intakeHandler(0);
-  driveVel(125);
+  while(tray.get_position() < 1600) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
   delay(200);
   driveVel(0);
-  delay(250);
-  driveVel(-300);
-  delay(1000);
-  driveVel(0);
-  chassis->stop();
   intakeHandler(0);
-  tray.move_velocity(0);
+  delay(500);
 
+  driveVel(-120);
+  tray.move_absolute(0, -200);
+  delay(2400);
+  driveVel(0);
   delay(5000);
+
 }
 void back5(bool blue) {
   intakeHandler(195);
