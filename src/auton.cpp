@@ -110,8 +110,9 @@ void protecc(bool blue) {
 void notprotecc(bool blue) {
   set_brake(COAST, tray); //make tray coast to cut down on motor strain
   intakeHandler(180); //run intakes
-  chassis->setMaxVelocity(275);
+//  chassis->setMaxVelocity();
   chassis->moveDistance(27_in); //pull the first two cubes in
+  chassis->setMaxVelocity(275);
   if(blue) {
     chassis->turnAngle(50_deg); //blue positive then negative
   }
@@ -132,24 +133,28 @@ void notprotecc(bool blue) {
   intakeHandler(180); //run intakes back to full for second line up
   chassis->setMaxVelocity(190);
   chassis->moveDistance(36.5_in); //collect the next 4 cubes
-  delay(100);
+  delay(75);
   intakeHandler(0); //lower speed to reduce motor strain after run through
   chassis->setMaxVelocity(400);
   chassis->moveDistance(-29_in);
   chassis->waitUntilSettled();
   delay(50);
   chassis->setMaxVelocity(150);
-  chassis->turnAngle(125_deg); //red
-  intakeHandler(0);
+  if(blue) { //cancel out initial turn
+    chassis->turnAngle(-125_deg);
+  }
+  else {
+    chassis->turnAngle(125_deg); //60 deg
+  }
   driveVel(0);
-  driveVel(200);
-  delay(850);
+  driveVel(300);
+  delay(825);
   driveVel(0);
   intakeHandler(-110);
   delay(200);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
-    tray.move_velocity(190);
+    tray.move_velocity(200);
   }
   tray.move_velocity(0);
   driveVel(100);
