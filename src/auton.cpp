@@ -121,8 +121,8 @@ void notprotecc(bool blue) {
   intakeHandler(30); //lower intake speed while moving to second line up
   chassis->setMaxVelocity(400);
   chassis->moveDistance(-28.5_in); //move to second line up
-  chassis->setMaxVelocity(250);
-  delay(150);
+  chassis->setMaxVelocity(275);
+  delay(50);
   if(blue) { //cancel out initial turn
     chassis->turnAngle(-50_deg);
   }
@@ -131,20 +131,20 @@ void notprotecc(bool blue) {
   }
   intakeHandler(180); //run intakes back to full for second line up
   chassis->setMaxVelocity(190);
-  chassis->moveDistance(35.5_in); //collect the next 4 cubes
+  chassis->moveDistance(36.5_in); //collect the next 4 cubes
+  delay(100);
   intakeHandler(0); //lower speed to reduce motor strain after run through
   chassis->setMaxVelocity(400);
-  chassis->moveDistance(-27.5_in);
+  chassis->moveDistance(-29_in);
   chassis->waitUntilSettled();
-  delay(150);
+  delay(50);
+  chassis->setMaxVelocity(150);
   chassis->turnAngle(125_deg); //red
   intakeHandler(0);
   driveVel(0);
-  delay(50);
   driveVel(200);
   delay(850);
   driveVel(0);
-  delay(200);
   intakeHandler(-110);
   delay(200);
   intakeHandler(0);
