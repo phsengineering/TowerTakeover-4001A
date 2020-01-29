@@ -4,9 +4,9 @@ using namespace okapi;
 std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
     .withMotors({4, 3}, {2, 1}) // pass motors to odomchassiscontroller builder
     .withGains(
-         { 0.00345, 0, 0.00009 }, // Distance controller gains
+         { 0.00345, 0.00002, 0.00009 }, // Distance controller gains
          { 0.0061, 0.0005, 0.0002175 }, // Turn controller gains
-         { 0.00022, 0, 0.0000 }  // Angle controller gains
+         { 0.00022, 0.0001, 0.00003 }  // Angle controller gains
      )
 
     .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
@@ -32,7 +32,8 @@ void odomtest() { //unused due to issues with turns/scales
 }
 
 void pidtest(){
-    chassis->turnAngle(90_deg);
+    //chassis->turnAngle(90_deg);
+    chassis->moveDistance(2_ft);
 }
 
 void autonhandler(int auton) { //check global integer auton
