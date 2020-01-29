@@ -63,10 +63,10 @@ void protecc(bool blue) {
     chassis->stop();
     chassis->waitUntilSettled();
     if(blue) {
-      chassis->turnAngle(-120_deg); //turn to face the four stack
+      chassis->turnAngle(-90_deg); //turn to face the four stack
     }
     else {
-      chassis->turnAngle(120_deg);
+      chassis->turnAngle(90_deg);
     }
     chassis->waitUntilSettled();
     set_brake(BRAKE, lift); //unlock lift
@@ -78,10 +78,10 @@ void protecc(bool blue) {
     intakeHandler(0);
     chassis->waitUntilSettled();
     if(blue) {
-      chassis->turnAngle(-160_deg); //turn back to face protected zone
+      chassis->turnAngle(-130_deg); //turn back to face protected zone
     }
     else {
-      chassis->turnAngle(160_deg);
+      chassis->turnAngle(130_deg);
     }
     chassis->waitUntilSettled();
     intakeHandler(200); //run intakes to get the last cube on the way to the zone
@@ -93,8 +93,8 @@ void protecc(bool blue) {
     driveVel(100);
     pros::delay(300);
     driveVel(0);
-    intakeHandler(-95); //pull cubes down a bit
-    delay(300);
+    intakeHandler(-110); //pull cubes down a bit
+    delay(350);
     intakeHandler(0);
     while(tray.get_position() < 1600) { //deploy 5 stack
       tray.move_velocity(190);
@@ -112,35 +112,35 @@ void notprotecc(bool blue) {
   intakeHandler(180); //run intakes
   chassis->moveDistance(26_in); //pull the first two cubes in
   if(blue) {
-    chassis->turnAngle(80_deg); //blue positive then negative
+    chassis->turnAngle(50_deg); //blue positive then negative
   }
   else {
-    chassis->turnAngle(-80_deg); //red negative then positive
+    chassis->turnAngle(-50_deg); //red negative then positive
   }
   intakeHandler(50); //lower intake speed while moving to second line up
   chassis->moveDistance(-27_in); //move to second line up
   if(blue) { //cancel out initial turn
-    chassis->turnAngle(-80_deg);
+    chassis->turnAngle(-50_deg);
   }
   else {
-    chassis->turnAngle(80_deg); //60 deg
+    chassis->turnAngle(50_deg); //60 deg
   }
   intakeHandler(180); //run intakes back to full for second line up
 
   chassis->moveDistance(30.5_in); //collect the next 4 cubes
   intakeHandler(0); //lower speed to reduce motor strain after run through
   if(blue) {
-    chassis->turnAngle(-190_deg); //turn back to the unprotectedzone
+    chassis->turnAngle(-160_deg); //turn back to the unprotectedzone
   }
   else {
-    chassis->turnAngle(190_deg);
+    chassis->turnAngle(160_deg);
   }
   intakeHandler(0);
   driveVel(320); //deploy on time
   delay(1300);
   driveVel(0);
-  intakeHandler(-95);
-  delay(175);
+  intakeHandler(-110);
+  delay(350);
   intakeHandler(0);
   tray.move_absolute(1600, 165);
   delay(1500);
@@ -166,7 +166,7 @@ void back5(bool blue) {
   intakeHandler(0);
   chassis->moveDistance(-22_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(155_deg); //red
+  chassis->turnAngle(125_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -175,7 +175,7 @@ void back5(bool blue) {
   driveVel(0);
   delay(200);
   intakeHandler(-110);
-  delay(300);
+  delay(350);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
     tray.move_velocity(190);
@@ -201,7 +201,7 @@ void blueback5() {
   intakeHandler(0);
   chassis->moveDistance(-21_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(-155_deg); //red
+  chassis->turnAngle(-125_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -210,7 +210,7 @@ void blueback5() {
   driveVel(0);
   delay(200);
   intakeHandler(-110);
-  delay(300);
+  delay(350);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
     tray.move_velocity(190);
@@ -235,7 +235,7 @@ void prog() {
   intakeHandler(0);
   chassis->moveDistance(-22_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(155_deg); //red
+  chassis->turnAngle(125_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -244,7 +244,7 @@ void prog() {
   driveVel(0);
   delay(200);
   intakeHandler(-110);
-  delay(300);
+  delay(350);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
     tray.move_velocity(190);
@@ -257,7 +257,7 @@ void prog() {
   delay(500);
   tray.move_absolute(10, -200);
   chassis->moveDistance(-14_in);
-  chassis->turnAngle(162_deg);
+  chassis->turnAngle(132_deg);
   intakeHandler(195);
   chassis->moveDistance(2.6_ft);
   intakeHandler(-80);
