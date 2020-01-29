@@ -258,7 +258,7 @@ void prog() {
   lift.move_absolute(205, 100);
   chassis->moveDistance(6_in);
   intakeHandler(-100);
-  delay(1000);
+  delay(1001);
   intakeHandler(0);
   chassis->stop();
 }
