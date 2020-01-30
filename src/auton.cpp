@@ -19,6 +19,7 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
     ))
     .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
     .buildOdometry(); // build an odometry chassis
+
 auto profileController = AsyncMotionProfileControllerBuilder() //currently unused because open loop
     .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
     .withOutput(chassis)
@@ -111,6 +112,7 @@ void notprotecc(bool blue) {
 //  chassis->setMaxVelocity();
   chassis->moveDistance(27_in); //pull the first two cubes in
   chassis->setMaxVelocity(275);
+  delay(750);
   if(blue) {
     chassis->turnAngle(50_deg); //blue positive then negative
   }
@@ -131,7 +133,7 @@ void notprotecc(bool blue) {
   intakeHandler(180); //run intakes back to full for second line up
   chassis->setMaxVelocity(190);
   chassis->moveDistance(36.5_in); //collect the next 4 cubes
-  delay(75);
+  delay(40);
   intakeHandler(0); //lower speed to reduce motor strain after run through
   chassis->setMaxVelocity(400);
   chassis->moveDistance(-29_in);
@@ -139,27 +141,24 @@ void notprotecc(bool blue) {
   delay(50);
   chassis->setMaxVelocity(150);
   if(blue) { //cancel out initial turn
-    chassis->turnAngle(-125_deg);
+    chassis->turnAngle(-132_deg);
   }
   else {
-    chassis->turnAngle(125_deg); //60 deg
+    chassis->turnAngle(132_deg); //60 deg
   }
   driveVel(0);
   driveVel(300);
-  delay(825);
+  delay(550);
   driveVel(0);
   intakeHandler(-110);
-  delay(200);
+  delay(150);
   intakeHandler(0);
-  while(tray.get_position() < 1600) {
+  while(tray.get_position() < 1590) {
     tray.move_velocity(200);
   }
   tray.move_velocity(0);
-  driveVel(100);
-  delay(200);
-  driveVel(0);
   intakeHandler(0);
-  delay(500);
+  delay(100);
 
   driveVel(-120);
   tray.move_absolute(0, -200);
@@ -176,7 +175,7 @@ void back5(bool blue) {
   intakeHandler(0);
   chassis->moveDistance(-22_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(125_deg); //red
+  chassis->turnAngle(155_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -185,7 +184,7 @@ void back5(bool blue) {
   driveVel(0);
   delay(200);
   intakeHandler(-110);
-  delay(350);
+  delay(300);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
     tray.move_velocity(190);
@@ -211,7 +210,7 @@ void blueback5() {
   intakeHandler(0);
   chassis->moveDistance(-21_in);
   chassis->waitUntilSettled();
-  chassis->turnAngle(-125_deg); //red
+  chassis->turnAngle(-155_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -220,7 +219,7 @@ void blueback5() {
   driveVel(0);
   delay(200);
   intakeHandler(-110);
-  delay(350);
+  delay(300);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
     tray.move_velocity(190);
