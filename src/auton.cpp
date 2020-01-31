@@ -108,12 +108,12 @@ void notprotecc(bool blue) {
 //  chassis->setMaxVelocity();
   chassis->moveDistance(27_in); //pull the first two cubes in
   chassis->setMaxVelocity(275);
-  delay(750);
+  delay(850);
   if(blue) {
-    chassis->turnAngle(50_deg); //blue positive then negative
+    chassis->turnAngle(53_deg); //blue positive then negative
   }
   else {
-    chassis->turnAngle(-50_deg); //red negative then positive
+    chassis->turnAngle(-53_deg); //red negative then positive
   }
   intakeHandler(30); //lower intake speed while moving to second line up
   chassis->setMaxVelocity(400);
@@ -121,10 +121,10 @@ void notprotecc(bool blue) {
   chassis->setMaxVelocity(275);
   delay(50);
   if(blue) { //cancel out initial turn
-    chassis->turnAngle(-50_deg);
+    chassis->turnAngle(-53_deg);
   }
   else {
-    chassis->turnAngle(50_deg); //60 deg
+    chassis->turnAngle(53_deg); //60 deg
   }
   intakeHandler(180); //run intakes back to full for second line up
   chassis->setMaxVelocity(190);
@@ -137,10 +137,10 @@ void notprotecc(bool blue) {
   delay(50);
   chassis->setMaxVelocity(150);
   if(blue) { //cancel out initial turn
-    chassis->turnAngle(-132_deg);
+    chassis->turnAngle(-137_deg);
   }
   else {
-    chassis->turnAngle(132_deg); //60 deg
+    chassis->turnAngle(137_deg); //60 deg
   }
   driveVel(0);
   driveVel(300);
@@ -150,7 +150,7 @@ void notprotecc(bool blue) {
   delay(150);
   intakeHandler(0);
   while(tray.get_position() < 1590) {
-    tray.move_velocity(200);
+    tray.move_velocity(170);
   }
   tray.move_velocity(0);
   intakeHandler(0);
