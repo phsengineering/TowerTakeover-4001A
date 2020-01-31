@@ -233,35 +233,47 @@ void blueback5() {
   delay(5000);
 }
 void prog() {
-  intakeHandler(195);
-  chassis->setMaxVelocity(250);
-  chassis->moveDistance(39_in);
-  pros::delay(100);
-  intakeHandler(0);
-  chassis->moveDistance(-22_in);
-  chassis->waitUntilSettled();
-  chassis->turnAngle(125_deg); //red
-  intakeHandler(0);
-  driveVel(0);
+  set_brake(COAST, tray); //make tray coast to cut down on motor strain
+  intakeHandler(180); //run intakes
+//  chassis->setMaxVelocity();
+  chassis->moveDistance(27_in); //pull the first two cubes in
+  chassis->setMaxVelocity(275);
+  delay(750);
+  chassis->turnAngle(-50_deg); //red negative then positive
+  intakeHandler(30); //lower intake speed while moving to second line up
+  chassis->setMaxVelocity(400);
+  chassis->moveDistance(-28.5_in); //move to second line up
+  chassis->setMaxVelocity(275);
   delay(50);
-  driveVel(200);
-  delay(850);
+  chassis->turnAngle(50_deg); //60 deg
+  intakeHandler(180); //run intakes back to full for second line up
+  chassis->setMaxVelocity(190);
+  chassis->moveDistance(36.5_in); //collect the next 4 cubes
+  delay(40);
+  intakeHandler(0); //lower speed to reduce motor strain after run through
+  chassis->setMaxVelocity(400);
+  chassis->moveDistance(-29_in);
+  chassis->waitUntilSettled();
+  delay(50);
+  chassis->setMaxVelocity(150);
+  chassis->turnAngle(132_deg); //60 deg
+
   driveVel(0);
-  delay(200);
+  driveVel(300);
+  delay(550);
+  driveVel(0);
   intakeHandler(-110);
-  delay(350);
+  delay(150);
   intakeHandler(0);
-  while(tray.get_position() < 1600) {
+  while(tray.get_position() < 1590) {
     tray.move_velocity(190);
   }
   tray.move_velocity(0);
-  driveVel(100);
-  delay(200);
-  driveVel(0);
   intakeHandler(0);
   delay(500);
-  tray.move_absolute(10, -200);
   chassis->moveDistance(-14_in);
+  delay(500);
+  tray.move_absolute(0, -200);
   chassis->turnAngle(132_deg);
   intakeHandler(195);
   chassis->moveDistance(2.6_ft);
@@ -275,4 +287,48 @@ void prog() {
   delay(1001);
   intakeHandler(0);
   chassis->stop();
+
+  // intakeHandler(195);
+  // chassis->setMaxVelocity(250);
+  // chassis->moveDistance(39_in);
+  // pros::delay(100);
+  // intakeHandler(0);
+  // chassis->moveDistance(-22_in);
+  // chassis->waitUntilSettled();
+  // chassis->turnAngle(125_deg); //red
+  // intakeHandler(0);
+  // driveVel(0);
+  // delay(50);
+  // driveVel(200);
+  // delay(850);
+  // driveVel(0);
+  // delay(200);
+  // intakeHandler(-110);
+  // delay(350);
+  // intakeHandler(0);
+  // while(tray.get_position() < 1600) {
+  //   tray.move_velocity(190);
+  // }
+  // tray.move_velocity(0);
+  // driveVel(100);
+  // delay(200);
+  // driveVel(0);
+  // intakeHandler(0);
+  // delay(500);
+  // tray.move_absolute(10, -200);
+  // chassis->moveDistance(-14_in);
+  // chassis->turnAngle(132_deg);
+  // intakeHandler(195);
+  // chassis->moveDistance(2.6_ft);
+  // intakeHandler(-80);
+  // pros::delay(650);
+  // intakeHandler(0);
+  // chassis->moveDistance(-9_in);
+  // lift.move_absolute(205, 100);
+  // chassis->moveDistance(6_in);
+  // intakeHandler(-100);
+  // delay(1001);
+  // intakeHandler(0);
+  // chassis->stop();
+
 }

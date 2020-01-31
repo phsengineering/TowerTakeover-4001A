@@ -7,14 +7,12 @@ int auton = 0;
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	autonSelector();
+	//autonSelector();
 
 }
-void autonSelector(){
-  delay(200); // prevent the bug where buttons trigger randomly on startup
-
+void competition_initialize(){
   const int autoCount = 7;
-  const char *autoNames[autoCount] = {
+  const char* autoNames[autoCount] = {
     "RED protecc",
     "BLUE protecc",
     "RED Back",
@@ -24,22 +22,17 @@ void autonSelector(){
 		"progskill"
   };
 
-  //auton selector
-  lcd::initialize();
   lcd::set_text(0, "Select an Auton");
   lcd::print(2, "%s", autoNames[auton]);
 
   while(1){
-    //display auton
-
-    if(choose.get_value() == 1){
+    if(choose.get_new_press()) {
       auton++;
       if(auton == autoCount)
         auton = 0;
 
       lcd::print(2, "%s", autoNames[auton]);
-      while(choose.get_value() == 1) delay(20);
-      delay(300);
+			lcd::print(3, "%d", auton);
     }
 
     delay(50);
