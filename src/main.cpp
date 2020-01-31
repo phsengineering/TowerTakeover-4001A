@@ -4,45 +4,47 @@
 
 using namespace pros;
 int auton = 0;
-void on_center_button() {
-	if(auton > 6) {
-		auton = 0;
-	}
-	else {
-		auton++;
-	}
-  if (auton == 0) {
-		pros::lcd::set_text(2, "RED protecc");
-	}
-	if (auton == 1) {
-		pros::lcd::set_text(2, "BLUE protecc");
-	}
-	else if (auton == 2) {
-		pros::lcd::set_text(2, "RED Back autonomous");
-	}
-	else if (auton == 3) {
-		pros::lcd::set_text(2, "BLUE Back autonomous");
-	}
-	else if (auton == 4) {
-		pros::lcd::set_text(2, "Red back 5 autonomous");
-	}
-	else if (auton == 5) {
-		pros::lcd::set_text(2, "Blue back 5 autonomous");
-	}
-	else if (auton == 6) {
-		pros::lcd::set_text(2, "Prog skills");
-	}
-}
-
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "4001A");
-	pros::lcd::set_text(2, "RED protecc");
-	pros::lcd::set_text(5, "Auton Ready");
-	pros::lcd::register_btn1_cb(on_center_button);
-}
+	autonSelector();
 
+}
+void autonSelector(){
+  delay(200); // prevent the bug where buttons trigger randomly on startup
+
+  const int autoCount = 7;
+  const char *autoNames[autoCount] = {
+    "RED protecc",
+    "BLUE protecc",
+    "RED Back",
+    "BLUE Back",
+    "RED 5",
+		"BLUE 5",
+		"progskill"
+  };
+
+  //auton selector
+  lcd::initialize();
+  lcd::set_text(0, "Select an Auton");
+  lcd::print(2, "%s", autoNames[auton]);
+
+  while(1){
+    //display auton
+
+    if(choose.get_value() == 1){
+      auton++;
+      if(auton == autoCount)
+        auton = 0;
+
+      lcd::print(2, "%s", autoNames[auton]);
+      while(choose.get_value() == 1) delay(20);
+      delay(300);
+    }
+
+    delay(50);
+  }
+}
 
 void autonomous() {
 	//pidtest();

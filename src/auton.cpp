@@ -32,10 +32,6 @@ void odomtest() { //unused due to issues with turns/scales
     chassis->driveToPoint({0_ft, -2_ft});
 }
 
-void pidtest(){
-    //chassis->turnAngle(90_deg);
-    chassis->moveDistance(2_ft);
-}
 
 void autonhandler(int auton) { //check global integer auton
    switch(auton) {
