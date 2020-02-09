@@ -4,48 +4,44 @@
 
 using namespace pros;
 int auton = 0;
-void on_center_button() {
-	if(auton > 6) {
-		auton = 0;
-	}
-	else {
-		auton++;
-	}
-  if (auton == 0) {
-		pros::lcd::set_text(2, "RED protecc");
-	}
-	if (auton == 1) {
-		pros::lcd::set_text(2, "BLUE protecc");
-	}
-	else if (auton == 2) {
-		pros::lcd::set_text(2, "RED Back autonomous");
-	}
-	else if (auton == 3) {
-		pros::lcd::set_text(2, "BLUE Back autonomous");
-	}
-	else if (auton == 4) {
-		pros::lcd::set_text(2, "Red back 5 autonomous");
-	}
-	else if (auton == 5) {
-		pros::lcd::set_text(2, "Blue back 5 autonomous");
-	}
-	else if (auton == 6) {
-		pros::lcd::set_text(2, "Prog skills");
-	}
-}
-
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "4001A");
-	pros::lcd::set_text(2, "RED protecc");
-	pros::lcd::set_text(5, "Auton Ready");
-	pros::lcd::register_btn1_cb(on_center_button);
+	//autonSelector();
+
+}
+void competition_initialize(){
+  const int autoCount = 7;
+  const char* autoNames[autoCount] = {
+    "RED protecc",
+    "BLUE protecc",
+    "RED Back",
+    "BLUE Back",
+    "RED 5",
+		"BLUE 5",
+		"progskill"
+  };
+
+  lcd::set_text(0, "Select an Auton");
+  lcd::print(2, "%s", autoNames[auton]);
+
+  while(1){
+    if(choose.get_new_press()) {
+      auton++;
+      if(auton == autoCount)
+        auton = 0;
+
+      lcd::print(2, "%s", autoNames[auton]);
+			lcd::print(3, "%d", auton);
+    }
+
+    delay(50);
+  }
 }
 
-
 void autonomous() {
-  autonhandler(auton);
+	//pidtest();
+	autonhandler(auton);
 }
 void opcontrol() {
   int count = 0;
@@ -66,7 +62,7 @@ void opcontrol() {
     int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y); //capture joystick values
     int r = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
     if (std::abs(y) < 16) { //feed through to motors with deadband/scales
-      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.4), r);
+      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.35), r);
     }
     drive(y, r);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) { //basic intake control
@@ -97,7 +93,7 @@ void opcontrol() {
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) { //reset tray and lfit
       lift.move_absolute(-5,-100);
-      tray.move_absolute(0, -200);
+      tray.move_absolute(-10, -200);
       delay(50);
     }
     if (tray.get_position() < 200) { //keep tray on brake if under 200 ticks, otherwise release
