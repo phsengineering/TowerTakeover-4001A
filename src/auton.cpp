@@ -273,48 +273,4 @@ void prog() {
   delay(1001);
   intakeHandler(0);
   chassis->stop();
-
-  // intakeHandler(195);
-  // chassis->setMaxVelocity(250);
-  // chassis->moveDistance(39_in);
-  // pros::delay(100);
-  // intakeHandler(0);
-  // chassis->moveDistance(-22_in);
-  // chassis->waitUntilSettled();
-  // chassis->turnAngle(125_deg); //red
-  // intakeHandler(0);
-  // driveVel(0);
-  // delay(50);
-  // driveVel(200);
-  // delay(850);
-  // driveVel(0);
-  // delay(200);
-  // intakeHandler(-110);
-  // delay(350);
-  // intakeHandler(0);
-  // while(tray.get_position() < 1600) {
-  //   tray.move_velocity(190);
-  // }
-  // tray.move_velocity(0);
-  // driveVel(100);
-  // delay(200);
-  // driveVel(0);
-  // intakeHandler(0);
-  // delay(500);
-  // tray.move_absolute(10, -200);
-  // chassis->moveDistance(-14_in);
-  // chassis->turnAngle(132_deg);
-  // intakeHandler(195);
-  // chassis->moveDistance(2.6_ft);
-  // intakeHandler(-80);
-  // pros::delay(650);
-  // intakeHandler(0);
-  // chassis->moveDistance(-9_in);
-  // lift.move_absolute(205, 100);
-  // chassis->moveDistance(6_in);
-  // intakeHandler(-100);
-  // delay(1001);
-  // intakeHandler(0);
-  // chassis->stop();
-
 }
