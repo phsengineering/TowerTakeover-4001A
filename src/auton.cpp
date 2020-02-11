@@ -19,7 +19,23 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
     ))
     .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
     .buildOdometry(); // build an odometry chassis
-
+auto fallBack = ChassisControllerBuilder()
+    .withMotors({4, 3}, {2, 1}) // pass motors to odomchassiscontroller builder
+    .withGains(
+         { 0.0011, 0, 0.0 }, // Distance controller gains
+         { 0.00315, 0.00, 0.00 }, // Turn controller gains
+         { 0.00022, 0, 0.0000 }  // Angle controller gains
+     )
+    .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
+    .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 4.25_in, 4.375_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
+    .withOdometry() // use the same scales as the chassis (above)
+    .withLogger(std::make_shared<Logger>(
+        TimeUtilFactory::createDefault().getTimer(),
+        "/ser/sout", // Output to the PROS terminal
+        Logger::LogLevel::debug // Show all feedback
+    ))
+    .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
+    .buildOdometry(); // build an odometry chassis
 auto profileController = AsyncMotionProfileControllerBuilder() //currently unused because open loop
     .withLimits({1.368, 5.5, 6.155}) //max vel, max accel, max jerk
     .withOutput(chassis)
@@ -44,9 +60,9 @@ void autonhandler(int auton) { //check global integer auton
      case 3:
        notprotecc(true); //blue unprotected (6-7)
       case 4:
-        back5(false);
+        back5(false); //red back 5 (uses old config)
       case 5:
-        blueback5();
+        back5(true); //blue back 5 (also uses old config)
       case 6:
         prog();
    }
@@ -165,13 +181,17 @@ void notprotecc(bool blue) {
 }
 void back5(bool blue) {
   intakeHandler(195);
-  chassis->setMaxVelocity(250);
-  chassis->moveDistance(39_in);
+  fallBack->setMaxVelocity(250);
+  fallBack->moveDistance(39_in);
   pros::delay(100);
   intakeHandler(0);
-  chassis->moveDistance(-22_in);
-  chassis->waitUntilSettled();
-  chassis->turnAngle(155_deg); //red
+  fallBack->moveDistance(-22_in);
+  if(blue) {
+      fallBack->turnAngle(-155_deg);
+  }
+  else {
+      fallBack->turnAngle(155_deg);
+  }
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -192,40 +212,6 @@ void back5(bool blue) {
   intakeHandler(0);
   delay(500);
 
-  driveVel(-100);
-  delay(2400);
-  driveVel(0);
-  tray.move_absolute(10, -200);
-  delay(5000);
-}
-void blueback5() {
-  intakeHandler(195);
-  chassis->setMaxVelocity(250);
-  chassis->moveDistance(38_in);
-  pros::delay(100);
-  intakeHandler(0);
-  chassis->moveDistance(-21_in);
-  chassis->waitUntilSettled();
-  chassis->turnAngle(-155_deg); //red
-  intakeHandler(0);
-  driveVel(0);
-  delay(50);
-  driveVel(200);
-  delay(850);
-  driveVel(0);
-  delay(200);
-  intakeHandler(-110);
-  delay(300);
-  intakeHandler(0);
-  while(tray.get_position() < 1600) {
-    tray.move_velocity(190);
-  }
-  tray.move_velocity(0);
-  driveVel(100);
-  delay(200);
-  driveVel(0);
-  intakeHandler(0);
-  delay(500);
   driveVel(-100);
   delay(2400);
   driveVel(0);
