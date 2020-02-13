@@ -4,11 +4,10 @@ using namespace okapi;
 std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder()
 .withMotors({4, 3}, {2, 1}) // pass motors to odomchassiscontroller builder
 .withGains(
-     { 0.0035, 0.001, 0.0003 }, // Distance controller gains
-     { 0.0061, 0.001, 0.0003 }, // Turn controller gains
-     { 0.00022, 0.0000, 0.00000 }  // Angle controller gains
- )
-
+        { 0.00345, 0.00002, 0.00009 }, // Distance controller gains
+        { 0.0061, 0.00057, 0.000212 }, // Turn controller gains
+        { 0.00022, 0.0001, 0.00003 }  // Angle controller gains
+)
 .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
 .withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 5.125_in, 4.3125_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
 .withOdometry() // use the same scales as the chassis (above)
@@ -39,8 +38,8 @@ void pidtest(){
 void autonhandler(int auton) { //check global integer auton
    switch(auton) {
      case 0:
-       //protecc(false); //red protected zone (5)
-       pidtest();
+       protecc(false); //red protected zone (5)
+       //pidtest();
      case 1:
        protecc(true); //blue protected zone (5)
      case 2:
