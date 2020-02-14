@@ -53,7 +53,9 @@ void autonhandler(int auton) { //check global integer auton
       case 6:
         prog();
       case 7:
-        back6();
+        back6(false);
+      case 8:
+        back6(true);
    }
 }
 void protecc(bool blue) {

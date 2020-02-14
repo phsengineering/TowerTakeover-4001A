@@ -11,7 +11,7 @@ void initialize() {
 
 }
 void competition_initialize(){
-  const int autoCount = 8;
+  const int autoCount = 9;
   const char* autoNames[autoCount] = {
     "RED protecc",
     "BLUE protecc",
@@ -19,8 +19,9 @@ void competition_initialize(){
     "BLUE Back",
     "RED 5",
 		"BLUE 5",
-		"progskill"
-    "back 6"
+		"progskill",
+    "RED back 6",
+    "BLUE back 6"
   };
 
   lcd::set_text(0, "Select an Auton");
