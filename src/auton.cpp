@@ -65,10 +65,10 @@ void protecc(bool blue) {
   chassis->setMaxVelocity(250);
   delay(75);
   if(blue) {
-    chassis->turnAngle(-100_deg);
+    chassis->turnAngle(-93_deg);
   }
   else {
-    chassis->turnAngle(100_deg);
+    chassis->turnAngle(93_deg);
   }
   chassis->setMaxVelocity(300);
   chassis->moveDistance(32.5_in);
@@ -78,10 +78,10 @@ void protecc(bool blue) {
   chassis->setMaxVelocity(240);
   delay(75);
   if(blue) {
-    chassis->turnAngle(-135_deg);
+    chassis->turnAngle(-138_deg);
   }
   else {
-    chassis->turnAngle(135_deg);
+    chassis->turnAngle(138_deg);
   }
   driveVel(150);
   delay(600);
@@ -277,7 +277,7 @@ void back6(bool blue) {
   intakeHandler(0);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-24_in);
+  chassis->moveDistance(-21_in);
   chassis->turnAngle(130_deg); //red
   intakeHandler(0);
   driveVel(0);
