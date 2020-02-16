@@ -39,6 +39,7 @@ void autonhandler(int auton) { //check global integer auton
    switch(auton) {
      case 0:
        protecc(false); //red protected zone (5)
+       //back5(false);
        //pidtest();
      case 1:
        protecc(true); //blue protected zone (5)
@@ -182,13 +183,13 @@ void notprotecc(bool blue) {
 void back5(bool blue) {
   intakeHandler(200);
   chassis->setMaxVelocity(200);
-  chassis->moveDistance(46_in);
+  chassis->moveDistance(43_in);
   delay(100);
-  intakeHandler(0);
+  intakeHandler(20);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-28_in);
-  chassis->turnAngle(130_deg); //red
+  chassis->moveDistance(-29_in);
+  chassis->turnAngle(135_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -218,13 +219,13 @@ void back5(bool blue) {
 void blueback5() {
   intakeHandler(200);
   chassis->setMaxVelocity(200);
-  chassis->moveDistance(46_in);
+  chassis->moveDistance(43_in);
   delay(100);
-  intakeHandler(0);
+  intakeHandler(20);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-26_in);
-  chassis->turnAngle(-125_deg); //red
+  chassis->moveDistance(-29_in);
+  chassis->turnAngle(-135_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -277,7 +278,60 @@ void back6(bool blue) {
   intakeHandler(0);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-21_in);
+  chassis->moveDistance(-23.5_in);
+  if(blue) {
+    chassis->turnAngle(-130_deg);
+  }
+  else {
+    chassis->turnAngle(130_deg); //red
+  }
+  intakeHandler(0);
+  driveVel(0);
+  delay(50);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  set_brake(COAST, intakeR);
+  set_brake(COAST, intakeL);
+  intakeHandler(-110);
+  delay(350);
+  intakeHandler(0);
+  while(tray.get_position() < 1700) {
+    tray.move_velocity(190);
+  }
+  tray.move_velocity(0);
+  driveVel(100);
+  delay(200);
+  driveVel(0);
+  intakeHandler(0);
+  delay(500);
+
+  driveVel(-100);
+  delay(2400);
+  driveVel(0);
+  tray.move_absolute(10, -200);
+  delay(5000);
+}
+void prog() {
+  intakeHandler(200);
+  chassis->setMaxVelocity(200);
+  chassis->moveDistance(42_in);
+  delay(100);
+  chassis->turnAngle(-40_deg);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(40);
+  set_brake(BRAKE, intakeR);
+  set_brake(BRAKE, intakeL);
+  chassis->moveDistance(-9_in);
+  chassis->turnAngle(40_deg);
+  intakeHandler(0);
+  delay(75);
+  chassis->setMaxVelocity(250);
+  chassis->moveDistance(-23.5_in);
   chassis->turnAngle(130_deg); //red
   intakeHandler(0);
   driveVel(0);
@@ -307,4 +361,3 @@ void back6(bool blue) {
   tray.move_absolute(10, -200);
   delay(5000);
 }
-void prog() {}
