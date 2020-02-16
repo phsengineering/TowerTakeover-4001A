@@ -11,7 +11,7 @@ void initialize() {
 
 }
 void competition_initialize(){
-  const int autoCount = 7;
+  const int autoCount = 9;
   const char* autoNames[autoCount] = {
     "RED protecc",
     "BLUE protecc",
@@ -19,7 +19,9 @@ void competition_initialize(){
     "BLUE Back",
     "RED 5",
 		"BLUE 5",
-		"progskill"
+		"progskill",
+    "RED back 6",
+    "BLUE back 6"
   };
 
   lcd::set_text(0, "Select an Auton");
@@ -86,13 +88,13 @@ void opcontrol() {
       intakeHandler(-180);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
-      tray.move_absolute(400,200); //no profiler used here, allows for more specific velocity control
+      tray.move_absolute(300,200); //no profiler used here, allows for more specific velocity control
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       moveLift(200);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) { //reset tray and lfit
-      lift.move_absolute(-5,-100);
+      lift.move_absolute(-7,-100);
       tray.move_absolute(-10, -200);
       delay(50);
     }
