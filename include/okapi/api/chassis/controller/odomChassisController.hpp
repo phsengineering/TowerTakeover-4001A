@@ -63,8 +63,6 @@ class OdomChassisController : public ChassisController {
    */
   virtual void
   driveToPoint(const Point &ipoint, bool ibackwards = false, const QLength &ioffset = 0_mm) = 0;
-  virtual void
-  driveToPointAsync(const Point &ipoint, bool ibackwards = false, const QLength &ioffset = 0_mm) = 0;
 
   /**
    * Turns the robot to face a point in the odom frame.
@@ -72,7 +70,6 @@ class OdomChassisController : public ChassisController {
    * @param ipoint The target point to turn to face.
    */
   virtual void turnToPoint(const Point &ipoint) = 0;
-  virtual void turnToPointAsync(const Point &ipoint) = 0;
 
   /**
    * Turns the robot to face an angle in the odom frame.
@@ -80,7 +77,6 @@ class OdomChassisController : public ChassisController {
    * @param iangle The angle to turn to.
    */
   virtual void turnToAngle(const QAngle &iangle) = 0;
-  virtual void turnToAngleAsync(const QAngle &iangle) = 0;
 
   /**
    * @return The current state.

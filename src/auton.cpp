@@ -9,7 +9,7 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
          { 0.00022, 0.0001, 0.00003 }  // Angle controller gains
      )
 .withSensors({'E', 'F', true}, {'A', 'B', false}, {'C', 'D', true}) //pass sensors for left, right, middle
-.withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 5.125_in, 4.3125_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
+.withDimensions(AbstractMotor::gearset::blue, {{2.75_in, 5_in, 4.3125_in, 2.75_in}, quadEncoderTPR}) //pass chassis dimensions. 2.75" tracking wheels, 4.25" distance and 4.375" b/w mid and middle wheel
 .withOdometry() // use the same scales as the chassis (above)
 .withLogger(std::make_shared<Logger>(
     TimeUtilFactory::createDefault().getTimer(),
@@ -19,7 +19,7 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
 .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
 .buildOdometry(); // build an odometry chassis
 auto profileController = AsyncMotionProfileControllerBuilder() //currently unused because open loop
-    .withLimits({1.5, 5.5, 6.155}) //max vel, max accel, max jerk
+    .withLimits({2, 5, 6}) //max vel, max accel, max jerk
     .withOutput(chassis)
     .buildMotionProfileController();
 void odomtest() { //unused due to issues with turns/scales
@@ -31,6 +31,8 @@ void odomtest() { //unused due to issues with turns/scales
 }
 
 void pidtest(){
+    // profileController->generatePath({{0_ft, 0_ft, 0_deg}, {10_ft, 10_ft, 45_deg}}, "A");
+    // profileController->setTarget("A");
     // intakeHandler(195);
     // chassis->moveDistance(39_in);
     // chassis->turnAngle(40_deg);
@@ -49,12 +51,43 @@ void pidtest(){
     // delay(3000);
     // intakeHandler(0);
     // delay(10000);
+    int i = 0;
     intakeHandler(195);
-    chassis->setMaxVelocity(400);
-    chassis->driveToPointAsync({2_ft, 0_ft}, false);
-    chassis->waitUntilSettled();
-    chassis->driveToPointAsync({0_ft, 2_ft}, false);
+    chassis->setMaxVelocity(300);
+    auto pos = chassis->getState();
+    chassis->driveToPoint({28_in, 0_ft});
+    pos = chassis->getState();
+    std::cout << pos.str() + " :Moved forward\n";
+    chassis->turnToAngle(42_deg);
+    pos = chassis->getState();
+    std::cout << pos.str() + " :Turned to 42\n";
+    chassis->moveDistance(-26_in);
+    pos = chassis->getState();
+    std::cout << pos.str() + " :Moved back 24 in\n";
+    chassis->setState(OdomState{0_ft, 0_ft});
+    chassis->turnToAngle(-42_deg);
+    pos = chassis->getState();
+    std::cout << pos.str() + " :Turned to 0\n";
+    chassis->driveToPoint({42_in, 0_in});
+    pos = chassis->getState();
+    std::cout << pos.str() + " :Moved forward again\n";
 
+    // OdomState pos_old;
+    // while(pos.x > .5_m || pos.y < -.6_m) {
+    //   driveVel(-300);
+    //   pos = chassis->getState();
+    //   if(pos == pos_old) {
+    //     i++;
+    //     if(i > 10) {
+    //       break;
+    //     }
+    //   }
+       std::cout << pos.str() + "\n";
+    //   pos_old = pos;
+    //   delay(10);
+    // }
+    // driveVel(0);
+    delay(50000);
 }
 
 void autonhandler(int auton) { //check global integer auton

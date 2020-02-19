@@ -58,17 +58,12 @@ class DefaultOdomChassisController : public OdomChassisController {
                     bool ibackwards = false,
                     const QLength &ioffset = 0_mm) override;
 
-  void driveToPointAsync(const Point &ipoint,
-                    bool ibackwards = false,
-                    const QLength &ioffset = 0_mm);
-
   /**
    * Turns the robot to face a point in the odom frame.
    *
    * @param ipoint The target point to turn to face.
    */
   void turnToPoint(const Point &ipoint) override;
-  void turnToPointAsync(const Point &ipoint);
 
   /**
    * @return The internal ChassisController.
@@ -84,7 +79,6 @@ class DefaultOdomChassisController : public OdomChassisController {
    * This delegates to the input ChassisController.
    */
   void turnToAngle(const QAngle &iangle) override;
-  void turnToAngleAsync(const QAngle &iangle);
 
   /**
    * This delegates to the input ChassisController.
