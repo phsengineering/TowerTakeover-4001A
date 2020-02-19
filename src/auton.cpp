@@ -31,32 +31,54 @@ void odomtest() { //unused due to issues with turns/scales
 }
 
 void pidtest(){
-    //chassis->turnAngle(90_deg);
-    chassis->moveDistance(-2_ft);
+    intakeHandler(195);
+    chassis->moveDistance(39_in);
+    chassis->turnAngle(40_deg);
+    chassis->moveDistance(-34_in);
+    chassis->turnAngle(-40_deg);
+    //delay(1000);
+    chassis->moveDistance(16_in);
+    delay(400);
+    chassis->setMaxVelocity(100);
+    chassis->moveDistanceAsync(6_in);
+    intakeHandler(100);
+    moveLift(50);
+    delay(400);
+    intakeHandler(195);
+    lift.move_absolute(-5, -100);
+    delay(3000);
+    intakeHandler(0);
+    delay(10000);
+    // intakeHandler(195);
+    // chassis->setMaxVelocity(400);
+    // chassis->driveToPoint({2_ft, 0_ft}, false);
+    // chassis->driveToPoint({0_ft, 2_ft}, false);
+
 }
 
 void autonhandler(int auton) { //check global integer auton
    switch(auton) {
      case 0:
-       protecc(false); //red protected zone (5)
+        pidtest();
+       //protecc(false); //red protected zone (5)
        //back5(false);
        //pidtest();
-     case 1:
-       protecc(true); //blue protected zone (5)
-     case 2:
-       notprotecc(false); //red unprotected (6-7)
-     case 3:
-       notprotecc(true); //blue unprotected (6-7)
-      case 4:
-        back5(false);
-      case 5:
-        blueback5();
-      case 6:
-        prog();
-      case 7:
-        back6(false);
-      case 8:
-        back6(true);
+     // case 1:
+     //   protecc(true); //blue protected zone (5)
+     // case 2:
+     //   notprotecc(false); //red unprotected (6-7)
+     // case 3:
+     //   notprotecc(true); //blue unprotected (6-7)
+     //  case 4:
+     //    back5(false);
+     //  case 5:
+     //    blueback5();
+     //  case 6:
+     //    prog();
+     //  case 7:
+     //    back6(false);
+     //  case 8:
+     //    back6(true);
    }
 }
 void protecc(bool blue) {

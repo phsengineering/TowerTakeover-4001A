@@ -53,6 +53,7 @@ void opcontrol() {
   set_brake(BRAKE, lift); //make sure we're not stressing out the lift/tray unnecessarily
   set_brake(BRAKE, tray);
   clearDrive();
+  chassis->stop();
   while (true) {
     if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) { //debug function
       clearDrive();
