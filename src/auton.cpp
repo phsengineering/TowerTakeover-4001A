@@ -31,28 +31,29 @@ void odomtest() { //unused due to issues with turns/scales
 }
 
 void pidtest(){
-    intakeHandler(195);
-    chassis->moveDistance(39_in);
-    chassis->turnAngle(40_deg);
-    chassis->moveDistance(-34_in);
-    chassis->turnAngle(-40_deg);
-    //delay(1000);
-    chassis->moveDistance(16_in);
-    delay(400);
-    chassis->setMaxVelocity(100);
-    chassis->moveDistanceAsync(6_in);
-    intakeHandler(100);
-    moveLift(50);
-    delay(400);
-    intakeHandler(195);
-    lift.move_absolute(-5, -100);
-    delay(3000);
-    intakeHandler(0);
-    delay(10000);
     // intakeHandler(195);
-    // chassis->setMaxVelocity(400);
-    // chassis->driveToPoint({2_ft, 0_ft}, false);
-    // chassis->driveToPoint({0_ft, 2_ft}, false);
+    // chassis->moveDistance(39_in);
+    // chassis->turnAngle(40_deg);
+    // chassis->moveDistance(-34_in);
+    // chassis->turnAngle(-40_deg);
+    // //delay(1000);
+    // chassis->moveDistance(16_in);
+    // delay(400);
+    // chassis->setMaxVelocity(100);
+    // chassis->moveDistanceAsync(6_in);
+    // intakeHandler(100);
+    // moveLift(50);
+    // delay(400);
+    // intakeHandler(195);
+    // lift.move_absolute(-5, -100);
+    // delay(3000);
+    // intakeHandler(0);
+    // delay(10000);
+    intakeHandler(195);
+    chassis->setMaxVelocity(400);
+    chassis->driveToPointAsync({2_ft, 0_ft}, false);
+    chassis->waitUntilSettled();
+    chassis->driveToPointAsync({0_ft, 2_ft}, false);
 
 }
 
