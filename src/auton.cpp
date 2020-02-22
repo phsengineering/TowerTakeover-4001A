@@ -18,18 +18,26 @@ std::shared_ptr<okapi::OdomChassisController> chassis = ChassisControllerBuilder
 ))
 .withMaxVelocity(300) //cap velocity at 300 to reduce jerk and cut down on PID correction time
 .buildOdometry(); // build an odometry chassis
-auto profileController = AsyncMotionProfileControllerBuilder() //currently unused because open loop
-    .withLimits({2, 5, 6}) //max vel, max accel, max jerk
-    .withOutput(chassis)
-    .buildMotionProfileController();
-void odomtest() { //unused due to issues with turns/scales
-    chassis->driveToPoint({3_ft, 0_ft});
-    chassis->setState(OdomState{0_ft, 0_ft});
-    chassis->driveToPoint({-1_ft, 0_ft}, true);
-    chassis->setState(OdomState{0_ft, 0_ft});
-    chassis->driveToPoint({0_ft, -2_ft});
-}
+auto test = ChassisControllerBuilder()
 
+	.withMotors({4, 3}, {2, 1}) // left motor is 1, right motor is 2 (reversed)
+	// green gearset, 4 inch wheel diameter, 11.5 inch wheelbase
+	.withDimensions(
+	  AbstractMotor::gearset::blue,
+      {{3.25_in, 8.5_in}, imev5BlueTPR * (5.0 / 3.0)}
+    )
+	.withSensors(
+			{'E', 'F', true},
+			{'A', 'B', false},
+      {'C', 'D', true}
+	)
+
+	.withOdometry({{2.75_in, 5_in}, quadEncoderTPR})
+	.buildOdometry();
+auto profileController = AsyncMotionProfileControllerBuilder()
+  .withOutput(test->getModel(), {{3.25_in, 8.5_in}, imev5BlueTPR * (5.0 / 3.0)}, {AbstractMotor::gearset::blue, (5.0 / 3.0)})
+  .withLimits({1.55, 1, 10})
+  .buildMotionProfileController();
 void pidtest(){
     // profileController->generatePath({{0_ft, 0_ft, 0_deg}, {10_ft, 10_ft, 45_deg}}, "A");
     // profileController->setTarget("A");
@@ -51,23 +59,22 @@ void pidtest(){
     // delay(3000);
     // intakeHandler(0);
     // delay(10000);
-    int i = 0;
+    profileController->generatePath({{0_ft, 0_ft, 0_deg}, {1_ft, 2.25_ft, 0_deg}}, "A");
     intakeHandler(195);
     chassis->setMaxVelocity(300);
     auto pos = chassis->getState();
     chassis->driveToPoint({28_in, 0_ft});
     pos = chassis->getState();
     std::cout << pos.str() + " :Moved forward\n";
-    chassis->turnToAngle(42_deg);
+    profileController->setTarget("A", true, false);
+    profileController->waitUntilSettled();
     pos = chassis->getState();
-    std::cout << pos.str() + " :Turned to 42\n";
-    chassis->moveDistance(-26_in);
+    std::cout << pos.str() + " After S curve\n";
+    chassis->turnToAngle(0_deg);
+    chassis->turnAngle(-5_deg);
     pos = chassis->getState();
-    std::cout << pos.str() + " :Moved back 24 in\n";
-    chassis->setState(OdomState{0_ft, 0_ft});
-    chassis->turnToAngle(-42_deg);
-    pos = chassis->getState();
-    std::cout << pos.str() + " :Turned to 0\n";
+    std::cout << pos.str() + " After correction turn\n";
+    chassis->setState({0_ft, 0_ft});
     chassis->driveToPoint({42_in, 0_in});
     pos = chassis->getState();
     std::cout << pos.str() + " :Moved forward again\n";
