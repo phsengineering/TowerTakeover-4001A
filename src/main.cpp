@@ -7,12 +7,12 @@ int auton = 0;
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	//autonSelector();
 
 }
 void competition_initialize(){
-  const int autoCount = 9;
+  const int autoCount = 10;
   const char* autoNames[autoCount] = {
+    "Auton test",
     "RED protecc",
     "BLUE protecc",
     "RED Back",
@@ -42,7 +42,6 @@ void competition_initialize(){
 }
 
 void autonomous() {
-	//pidtest();
 	autonhandler(auton);
 }
 void opcontrol() {

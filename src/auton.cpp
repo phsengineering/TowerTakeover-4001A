@@ -39,26 +39,6 @@ auto profileController = AsyncMotionProfileControllerBuilder()
   .withLimits({1.55, 1, 10})
   .buildMotionProfileController();
 void pidtest(){
-    // profileController->generatePath({{0_ft, 0_ft, 0_deg}, {10_ft, 10_ft, 45_deg}}, "A");
-    // profileController->setTarget("A");
-    // intakeHandler(195);
-    // chassis->moveDistance(39_in);
-    // chassis->turnAngle(40_deg);
-    // chassis->moveDistance(-34_in);
-    // chassis->turnAngle(-40_deg);
-    // //delay(1000);
-    // chassis->moveDistance(16_in);
-    // delay(400);
-    // chassis->setMaxVelocity(100);
-    // chassis->moveDistanceAsync(6_in);
-    // intakeHandler(100);
-    // moveLift(50);
-    // delay(400);
-    // intakeHandler(195);
-    // lift.move_absolute(-5, -100);
-    // delay(3000);
-    // intakeHandler(0);
-    // delay(10000);
     profileController->generatePath({{0_ft, 0_ft, 0_deg}, {1_ft, 2.25_ft, 0_deg}}, "A");
     intakeHandler(195);
     chassis->setMaxVelocity(300);
@@ -78,48 +58,31 @@ void pidtest(){
     chassis->driveToPoint({42_in, 0_in});
     pos = chassis->getState();
     std::cout << pos.str() + " :Moved forward again\n";
-
-    // OdomState pos_old;
-    // while(pos.x > .5_m || pos.y < -.6_m) {
-    //   driveVel(-300);
-    //   pos = chassis->getState();
-    //   if(pos == pos_old) {
-    //     i++;
-    //     if(i > 10) {
-    //       break;
-    //     }
-    //   }
-       std::cout << pos.str() + "\n";
-    //   pos_old = pos;
-    //   delay(10);
-    // }
-    // driveVel(0);
     delay(50000);
 }
 
 void autonhandler(int auton) { //check global integer auton
    switch(auton) {
-     case 0:
-        pidtest();
-       //protecc(false); //red protected zone (5)
-       //back5(false);
-       //pidtest();
-     // case 1:
-     //   protecc(true); //blue protected zone (5)
-     // case 2:
-     //   notprotecc(false); //red unprotected (6-7)
-     // case 3:
-     //   notprotecc(true); //blue unprotected (6-7)
-     //  case 4:
-     //    back5(false);
-     //  case 5:
-     //    blueback5();
-     //  case 6:
-     //    prog();
-     //  case 7:
-     //    back6(false);
-     //  case 8:
-     //    back6(true);
+      case 0:
+        pidtest(); //testing auton
+      case 1:
+        protecc(false); //red protected zone (5)
+      case 2:
+        protecc(true); //blue protected zone (5)
+      case 3:
+        notprotecc(false); //red unprotected (6-7)
+      case 4:
+        notprotecc(true); //blue unprotected (6-7)
+      case 5:
+        back5(false); //back 5 red
+      case 6:
+        blueback5(); //blue 5
+      case 7:
+        prog(); //prog skills
+      case 8:
+        back6(false); //back 6 red (unstable)
+      case 9:
+        back6(true); //back 6 blue (unstable)
    }
 }
 void protecc(bool blue) {
