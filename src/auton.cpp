@@ -36,28 +36,56 @@ auto test = ChassisControllerBuilder()
 	.buildOdometry();
 auto profileController = AsyncMotionProfileControllerBuilder()
   .withOutput(test->getModel(), {{3.25_in, 8.5_in}, imev5BlueTPR * (5.0 / 3.0)}, {AbstractMotor::gearset::blue, (5.0 / 3.0)})
-  .withLimits({1.55, 1, 10})
+  .withLimits({.6, .75, 10})
   .buildMotionProfileController();
 void pidtest(){
-    profileController->generatePath({{0_ft, 0_ft, 0_deg}, {1_ft, 2.25_ft, 0_deg}}, "A");
+    profileController->generatePath({{30_in, 0_ft, 0_deg}, {20_in, 1_ft, 90_deg}, {20_in, 2.75_ft, 90_deg}}, "A"); //originally 28 in
     intakeHandler(195);
-    chassis->setMaxVelocity(300);
+    chassis->setMaxVelocity(250);
     auto pos = chassis->getState();
-    chassis->driveToPoint({28_in, 0_ft});
+    chassis->driveToPoint({30_in, 0_ft});
     pos = chassis->getState();
     std::cout << pos.str() + " :Moved forward\n";
-    profileController->setTarget("A", true, false);
+    profileController->setTarget("A", true, true);
     profileController->waitUntilSettled();
     pos = chassis->getState();
     std::cout << pos.str() + " After S curve\n";
+    delay(500);
     chassis->turnToAngle(0_deg);
-    chassis->turnAngle(-5_deg);
+    //debugger();
     pos = chassis->getState();
     std::cout << pos.str() + " After correction turn\n";
     chassis->setState({0_ft, 0_ft});
     chassis->driveToPoint({42_in, 0_in});
     pos = chassis->getState();
     std::cout << pos.str() + " :Moved forward again\n";
+
+    chassis->moveDistance(-29_in);
+    chassis->turnAngle(-135_deg); //red
+    intakeHandler(0);
+    driveVel(0);
+    delay(50);
+    driveVel(200);
+    delay(850);
+    driveVel(0);
+    delay(200);
+    intakeHandler(-110);
+    delay(350);
+    intakeHandler(0);
+    while(tray.get_position() < 1700) {
+      tray.move_velocity(190);
+    }
+    tray.move_velocity(0);
+    driveVel(100);
+    delay(200);
+    driveVel(0);
+    intakeHandler(0);
+    delay(500);
+
+    driveVel(-100);
+    delay(2400);
+    driveVel(0);
+    tray.move_absolute(10, -200);
     delay(50000);
 }
 
@@ -386,4 +414,7 @@ void prog() {
   driveVel(0);
   tray.move_absolute(10, -200);
   delay(5000);
+}
+void debugger() {
+  while(true) {}
 }
