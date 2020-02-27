@@ -81,18 +81,20 @@ void protecc(bool blue) {
   intakeHandler(200);
   chassis->setMaxVelocity(300);
   chassis->driveToPoint({19_in, 0_ft});
-  delay(250);
+  delay(350);
   chassis->setMaxVelocity(300);
   pos = chassis->getState();
+  chassis->setMaxVelocity(300);
   if(blue) {
-    chassis->driveToPoint({16.75_in, -32.5_in});
+    chassis->driveToPoint({18.5_in, -35_in});
   }
   else {
-    chassis->driveToPoint({16.75_in, 32.5_in});
+    chassis->driveToPoint({18.5_in, 35_in});
   }
   delay(600);
   intakeHandler(15);
-  chassis->moveDistance(-31_in);
+  chassis->setMaxVelocity(300);
+  chassis->moveDistance(-35_in);
   chassis->setMaxVelocity(240);
   delay(75);
   if(blue) {
@@ -101,10 +103,11 @@ void protecc(bool blue) {
   else {
     chassis->turnAngle(135_deg);
   }
+  delay(250);
   driveVel(150);
   delay(600);
   driveVel(0);
-  intakeHandler(-125);
+  intakeHandler(-150);
   delay(380);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
@@ -119,23 +122,19 @@ void protecc(bool blue) {
 
   driveVel(-120);
   tray.move_absolute(0, -200);
-  delay(2400);
+  delay(1500);
   driveVel(0);
-  delay(5000);
-
-
-
-  delay(9914);
+  debugger();
 }
 void notprotecc(bool blue) {
   auto pos = chassis->getState();
 
   set_brake(COAST, tray); //make tray coast to cut down on motor strain
   intakeHandler(200); //run intakes
-  //profileController->moveTo({{0_in, 0_in, 0_deg}, {30_in, 0_in, 0_deg}}, false, false);
   chassis->setMaxVelocity(280);
   pos = chassis->getState();
   chassis->driveToPoint({30_in, 0_ft}); //pull the first two cubes in
+  std::cout << "First point\n";
   chassis->setMaxVelocity(380);
   if(blue) {
     chassis->turnAngle(47_deg); //blue positive then negative
@@ -145,7 +144,8 @@ void notprotecc(bool blue) {
   }
   intakeHandler(30); //lower intake speed while moving to second line up
   chassis->setMaxVelocity(320);
-  chassis->moveDistance(-30.5_in); //move to second line up
+  chassis->moveDistance(-31_in); //move to second line up
+  std::cout << "Point 2\n";
   delay(50);
   pos = chassis->getState();
   intakeHandler(200);
@@ -153,46 +153,51 @@ void notprotecc(bool blue) {
   chassis->setMaxVelocity(210);
   // chassis->driveToPoint({43.5_in, 2.1_ft});
   if(blue) {
-    chassis->driveToPoint({-43.5_in, -2.13_ft});
+    chassis->driveToPoint({-43.5_in, -2.17_ft});
   }
   else {
-    chassis->driveToPoint({43.5_in, 2.13_ft});
+    chassis->driveToPoint({43.5_in, 2.17_ft});
   } //collect the next 4 cubes
+  std::cout << "Point 3\n";
   delay(150);
   intakeHandler(20);
   chassis->setMaxVelocity(360);
-  chassis->moveDistance(-30_in);
-  set_brake(HOLD, tray);
-  intakeHandler(165);
-  tray.move_absolute(145,100);
+  chassis->moveDistance(-29_in);
+  set_brake(BRAKE, tray);
   chassis->setMaxVelocity(220);
   if(blue) {
-    chassis->turnAngle(-135_deg);
+    chassis->turnAngle(-130_deg);
    //blue positive then negative
   }
   else {
-    chassis->turnAngle(135_deg);
+    chassis->turnAngle(130_deg);
      //red negative then positive
   }
   driveVel(250);
   delay(450);
   driveVel(0);
+  chassis->stop();
   delay(10);
   intakeHandler(-180);
   delay(270);
   intakeHandler(0);
   set_brake(COAST, intakeL);
   set_brake(COAST, intakeR);
+  std::cout << "Reached deploy point\n";
   while(tray.get_position() < 1625) {
     tray.move_velocity(185);
   }
   tray.move_velocity(0);
-  delay(250);
-  driveVel(-115);
-  set_brake(BRAKE, tray);
-  delay(2400);
+  driveVel(350);
+  delay(275);
   driveVel(0);
-  delay(2000000);
+  delay(150);
+  driveVel(-120);
+  delay(2500);
+  driveVel(0);
+  debugger();
+  tray.move_absolute(-5, -100);
+
 }
 void back5(bool blue) {
   intakeHandler(200);
