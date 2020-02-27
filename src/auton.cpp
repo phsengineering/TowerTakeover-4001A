@@ -36,7 +36,7 @@ auto test = ChassisControllerBuilder()
 	.buildOdometry();
 auto profileController = AsyncMotionProfileControllerBuilder()
   .withOutput(test->getModel(), {{3.25_in, 8.5_in}, imev5BlueTPR * (5.0 / 3.0)}, {AbstractMotor::gearset::blue, (5.0 / 3.0)})
-  .withLimits({1.5, .75, 10})
+  .withLimits({1, .75, 10})
   .buildMotionProfileController();
 void pidtest(){
 
@@ -66,35 +66,45 @@ void autonhandler(int auton) { //check global integer auton
         back6(true); //back 6 blue (unstable)
    }
 }
+void hightake() {
+  delay(1500);
+  lift.move_absolute(70,100);
+  delay(750);
+  while(lift.get_position() > 60) {
+    lift.move_velocity(-100);
+  }
+  lift.move_absolute(-5,-100);
+}
 void protecc(bool blue) {
+  auto pos = chassis->getState();
+  pos = chassis->getState();
   intakeHandler(200);
   chassis->setMaxVelocity(300);
-  chassis->moveDistance(19_in);
-  chassis->setMaxVelocity(250);
-  delay(75);
+  chassis->driveToPoint({19_in, 0_ft});
+  delay(250);
+  chassis->setMaxVelocity(300);
+  pos = chassis->getState();
   if(blue) {
-    chassis->turnAngle(-93_deg);
+    chassis->driveToPoint({16.75_in, -32.5_in});
   }
   else {
-    chassis->turnAngle(93_deg);
+    chassis->driveToPoint({16.75_in, 32.5_in});
   }
-  chassis->setMaxVelocity(300);
-  chassis->moveDistance(32.5_in);
-  delay(400);
+  delay(600);
   intakeHandler(15);
   chassis->moveDistance(-31_in);
   chassis->setMaxVelocity(240);
   delay(75);
   if(blue) {
-    chassis->turnAngle(-138_deg);
+    chassis->turnAngle(-135_deg);
   }
   else {
-    chassis->turnAngle(138_deg);
+    chassis->turnAngle(135_deg);
   }
   driveVel(150);
   delay(600);
   driveVel(0);
-  intakeHandler(-110);
+  intakeHandler(-125);
   delay(380);
   intakeHandler(0);
   while(tray.get_position() < 1600) {
@@ -118,68 +128,71 @@ void protecc(bool blue) {
   delay(9914);
 }
 void notprotecc(bool blue) {
-  profileController->generatePath({{29.5_in, 0_ft, 0_deg}, {20_in, 1_ft, 90_deg}, {17_in, 2.5_ft, 90_deg}}, "A"); //originally 28 in
-  intakeHandler(195);
-  chassis->setMaxVelocity(350);
   auto pos = chassis->getState();
-  chassis->driveToPoint({29.5_in, 0_ft});
+
+  set_brake(COAST, tray); //make tray coast to cut down on motor strain
+  intakeHandler(200); //run intakes
+  //profileController->moveTo({{0_in, 0_in, 0_deg}, {30_in, 0_in, 0_deg}}, false, false);
+  chassis->setMaxVelocity(280);
   pos = chassis->getState();
-  std::cout << pos.str() + " :Moved forward\n";
+  chassis->driveToPoint({30_in, 0_ft}); //pull the first two cubes in
+  chassis->setMaxVelocity(380);
   if(blue) {
-    profileController->setTarget("A", true, true);
+    chassis->turnAngle(47_deg); //blue positive then negative
   }
   else {
-    profileController->setTarget("A", true, false);
+    chassis->turnAngle(-47_deg); //red negative then positive
   }
-  profileController->waitUntilSettled();
+  intakeHandler(30); //lower intake speed while moving to second line up
+  chassis->setMaxVelocity(320);
+  chassis->moveDistance(-30.5_in); //move to second line up
+  delay(50);
   pos = chassis->getState();
-  std::cout << pos.str() + " After S curve\n";
-  delay(500);
-  chassis->turnToAngle(0_deg);
-  //debugger();
-  pos = chassis->getState();
-  std::cout << pos.str() + " After correction turn\n";
-  chassis->setMaxVelocity(225);
+  intakeHandler(200);
+  pos = chassis->getState(); //run intakes back to full for second line up
+  chassis->setMaxVelocity(210);
+  // chassis->driveToPoint({43.5_in, 2.1_ft});
   if(blue) {
-    chassis->driveToPoint({3.9_ft, -2_ft});
+    chassis->driveToPoint({-43.5_in, -2.13_ft});
   }
   else {
-    chassis->driveToPoint({3.9_ft, 2_ft});
-  }
-  pos = chassis->getState();
-  std::cout << pos.str() + " :Moved forward again\n";
-  intakeHandler(45);
+    chassis->driveToPoint({43.5_in, 2.13_ft});
+  } //collect the next 4 cubes
+  delay(150);
+  intakeHandler(20);
   chassis->setMaxVelocity(360);
-  chassis->moveDistance(-24.5_in);
+  chassis->moveDistance(-30_in);
+  set_brake(HOLD, tray);
+  intakeHandler(165);
+  tray.move_absolute(145,100);
+  chassis->setMaxVelocity(220);
   if(blue) {
     chassis->turnAngle(-135_deg);
+   //blue positive then negative
   }
   else {
     chassis->turnAngle(135_deg);
+     //red negative then positive
   }
-  intakeHandler(0);
+  driveVel(250);
+  delay(450);
   driveVel(0);
-  delay(50);
-  driveVel(200);
-  delay(850);
-  driveVel(0);
-  delay(200);
-  intakeHandler(-110);
-  delay(210);
+  delay(10);
+  intakeHandler(-180);
+  delay(270);
   intakeHandler(0);
-  while(tray.get_position() < 1700) {
-    tray.move_velocity(190);
+  set_brake(COAST, intakeL);
+  set_brake(COAST, intakeR);
+  while(tray.get_position() < 1625) {
+    tray.move_velocity(185);
   }
   tray.move_velocity(0);
-  driveVel(100);
-  delay(300);
-  driveVel(0);
-  delay(100);
-  driveVel(-150);
+  delay(250);
+  driveVel(-115);
+  set_brake(BRAKE, tray);
   delay(2400);
   driveVel(0);
-  tray.move_absolute(10, -200);
-  delay(50000);
+  delay(2000000);
 }
 void back5(bool blue) {
   intakeHandler(200);
@@ -189,7 +202,7 @@ void back5(bool blue) {
   intakeHandler(20);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-27.5_in);
+  chassis->moveDistance(-29_in);
   chassis->turnAngle(135_deg); //red
   intakeHandler(0);
   driveVel(0);
@@ -225,7 +238,7 @@ void blueback5() {
   intakeHandler(20);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-27.5_in);
+  chassis->moveDistance(-29_in);
   chassis->turnAngle(-135_deg); //red
   intakeHandler(0);
   driveVel(0);
@@ -255,7 +268,7 @@ void blueback5() {
 }
 void back6(bool blue) {
   intakeHandler(200);
-  chassis->setMaxVelocity(215);
+  chassis->setMaxVelocity(200);
   chassis->moveDistance(42_in);
   delay(100);
   if(blue) {
@@ -278,7 +291,7 @@ void back6(bool blue) {
   }
   intakeHandler(0);
   delay(75);
-  chassis->setMaxVelocity(300);
+  chassis->setMaxVelocity(250);
   chassis->moveDistance(-23.5_in);
   if(blue) {
     chassis->turnAngle(-130_deg);
@@ -296,7 +309,7 @@ void back6(bool blue) {
   set_brake(COAST, intakeR);
   set_brake(COAST, intakeL);
   intakeHandler(-110);
-  delay(250);
+  delay(350);
   intakeHandler(0);
   while(tray.get_position() < 1700) {
     tray.move_velocity(190);
@@ -317,13 +330,23 @@ void back6(bool blue) {
 void prog() {
   intakeHandler(200);
   chassis->setMaxVelocity(200);
-  chassis->moveDistance(43_in);
+  chassis->moveDistance(42_in);
   delay(100);
-  intakeHandler(20);
+  chassis->turnAngle(-40_deg);
+  driveVel(200);
+  delay(850);
+  driveVel(0);
+  delay(200);
+  intakeHandler(40);
+  set_brake(BRAKE, intakeR);
+  set_brake(BRAKE, intakeL);
+  chassis->moveDistance(-9_in);
+  chassis->turnAngle(40_deg);
+  intakeHandler(0);
   delay(75);
   chassis->setMaxVelocity(250);
-  chassis->moveDistance(-25.5_in);
-  chassis->turnAngle(135_deg); //red
+  chassis->moveDistance(-23.5_in);
+  chassis->turnAngle(130_deg); //red
   intakeHandler(0);
   driveVel(0);
   delay(50);
@@ -331,8 +354,10 @@ void prog() {
   delay(850);
   driveVel(0);
   delay(200);
+  set_brake(COAST, intakeR);
+  set_brake(COAST, intakeL);
   intakeHandler(-110);
-  delay(250);
+  delay(350);
   intakeHandler(0);
   while(tray.get_position() < 1700) {
     tray.move_velocity(190);
@@ -343,28 +368,12 @@ void prog() {
   driveVel(0);
   intakeHandler(0);
   delay(500);
-  chassis->setMaxVelocity(100);
-  tray.move_absolute(0, -100);
-  chassis->moveDistance(-20_in);
-  chassis->turnToAngle(0_deg);
+
   driveVel(-100);
-  delay(1700);
+  delay(2400);
   driveVel(0);
-  chassis->setState({0_ft, 0_ft});
-  chassis->setMaxVelocity(200);
-  intakeHandler(195);
-  chassis->driveToPoint({42_in, 0_ft});
-  chassis->moveDistance(-5_in);
-  intakeHandler(-110);
-  delay(350);
-  intakeHandler(0);
-  delay(50);
-  moveLift(160);
-  delay(300);
-  intakeHandler(-110);
-  delay(850);
-  intakeHandler(0);
-  debugger();
+  tray.move_absolute(10, -200);
+  delay(5000);
 }
 void debugger() {
   while(true) {}

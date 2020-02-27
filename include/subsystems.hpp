@@ -40,3 +40,4 @@ void pidtest();
 void autonSelector();
 void back6(bool blue);
 void debugger();
+void hightake();
