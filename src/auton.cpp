@@ -179,7 +179,7 @@ void notprotecc(bool blue) {
   chassis->stop();
   delay(10);
   intakeHandler(-180);
-  delay(270);
+  delay(250);
   intakeHandler(0);
   set_brake(COAST, intakeL);
   set_brake(COAST, intakeR);
