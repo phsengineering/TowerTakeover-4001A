@@ -7,12 +7,12 @@ int auton = 0;
 void initialize() {
   delay(200);
 	pros::lcd::initialize();
-	//autonSelector();
 
 }
 void competition_initialize(){
-  const int autoCount = 9;
+  const int autoCount = 10;
   const char* autoNames[autoCount] = {
+    "Auton test",
     "RED protecc",
     "BLUE protecc",
     "RED Back",
@@ -42,7 +42,6 @@ void competition_initialize(){
 }
 
 void autonomous() {
-	//pidtest();
 	autonhandler(auton);
 }
 void opcontrol() {
@@ -53,6 +52,7 @@ void opcontrol() {
   set_brake(BRAKE, lift); //make sure we're not stressing out the lift/tray unnecessarily
   set_brake(BRAKE, tray);
   clearDrive();
+  chassis->stop();
   while (true) {
     if(mainController.get_digital(E_CONTROLLER_DIGITAL_UP)) { //debug function
       clearDrive();
@@ -64,7 +64,7 @@ void opcontrol() {
     int y = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_Y); //capture joystick values
     int r = mainController.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
     if (std::abs(y) < 16) { //feed through to motors with deadband/scales
-      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.35), r);
+      r = 127.0 * std::copysign(std::pow(std::abs(r / 127.0), 1.45), r);
     }
     drive(y, r);
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_R1)) { //basic intake control
@@ -88,14 +88,14 @@ void opcontrol() {
       intakeHandler(-180);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_Y)) {
-      tray.move_absolute(300,200); //no profiler used here, allows for more specific velocity control
+      tray.move_absolute(150,200); //no profiler used here, allows for more specific velocity control
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_L1)) {
       moveLift(200);
     }
     if (mainController.get_digital(E_CONTROLLER_DIGITAL_A)) { //reset tray and lfit
       lift.move_absolute(-7,-100);
-      tray.move_absolute(-10, -200);
+      tray.move_absolute(0, -200);
       delay(50);
     }
     if (tray.get_position() < 200) { //keep tray on brake if under 200 ticks, otherwise release
