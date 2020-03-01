@@ -79,12 +79,9 @@ void protecc(bool blue) {
   auto pos = chassis->getState();
   pos = chassis->getState();
   intakeHandler(200);
-  chassis->setMaxVelocity(300);
+  chassis->setMaxVelocity(200);
   chassis->driveToPoint({19_in, 0_ft});
   delay(350);
-  chassis->setMaxVelocity(300);
-  pos = chassis->getState();
-  chassis->setMaxVelocity(300);
   if(blue) {
     chassis->driveToPoint({18.5_in, -35_in});
   }
@@ -93,9 +90,7 @@ void protecc(bool blue) {
   }
   delay(600);
   intakeHandler(15);
-  chassis->setMaxVelocity(300);
   chassis->moveDistance(-35_in);
-  chassis->setMaxVelocity(240);
   delay(75);
   if(blue) {
     chassis->turnAngle(-135_deg);
