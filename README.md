@@ -5,10 +5,11 @@ This repository contains all of the code for team 4001A - Aetherium, from Parkla
 Season record
 -------------
 - 57-9-1
+- 2020 Vex Robotics Virtual World Championship Division Finalists - Automation Division
 - 3X Excellence (2020 Eastern PA Excellence Award winners)
 - 4X Tournament Champions
 - 4X Robot Skills Champions
-- 166 pt skills - Ranked #19 in the world
+- 166 pt skills - Ranked #16 in the world for HS teams
 - 2020 Night at the Museum (NATM) Finalists and Judges Award winners
 - Eastern PA Tournament Semifinalists
 - Highest total match score in the world for Tower Takeover (SF #1-1, with 169A against 169Y and 169E)
